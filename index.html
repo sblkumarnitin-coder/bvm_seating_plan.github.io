@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Exam Attendance · Bal Vidya Mandir , Sambhal</title>
+  <title>Exam Attendance · Bal Vidya Mandir · LAST WORKING</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -638,7 +638,7 @@
   <!-- SCHOOL HEADER - Text symbols already in CSS :before -->
   <div class="school-header">
     <h1>BAL VIDYA MANDIR, SAMBHAL</h1>
-    <h2>EXAMINATION ATTENDANCE · ROOM WISE SEATING PLAN</h2>
+    <h2>EXAMINATION ATTENDANCE · ROOM WISE SEATING</h2>
   </div>
 
   <!-- ROOM & DATE INFO -->
@@ -1071,7 +1071,7 @@
         loadSeatingPlan(currentRoomNo, currentDate);
       }
 
-      // ============ SUBMIT ATTENDANCE ============
+      // ============ SUBMIT ATTENDANCE - FIXED VERSION ============
       async function submitAttendance() {
         if (isCurrentSelectionLocked) {
           alert(`❌ Attendance for Room ${currentRoomNo} on ${currentDate} is already submitted and LOCKED.`);
@@ -1096,8 +1096,11 @@
         if (!confirm(`📤 Submit attendance to sheet "${sheetName}"?\n\nRoom: ${currentRoomNo}\nDate: ${selectedDate}\nAbsent Students: ${absentList.length}\n\n⚠️ After submission, this room and date will be LOCKED!`)) {
           return;
         }
+        
         const values = [];
+        
         if (absentList.length > 0) {
+          // If there are absent students, send their details
           absentList.forEach(item => {
             values.push([
               item.roll.toString(),
@@ -1109,15 +1112,43 @@
             ]);
           });
         } else {
+          // ALL STUDENTS PRESENT - Get a representative class from the room blocks
+          // Filter out blocks with start=0 AND end=0 (like "BREAK" periods)
+          const validBlocks = currentRoomBlocks.filter(block => 
+            !(block.startRoll === 0 && block.endRoll === 0)
+          );
+          
+          let representativeClass = "UNKNOWN";
+          let representativeSubject = "ALL_PRESENT";
+          
+          if (validBlocks.length > 0) {
+            // Use the first valid class as representative
+            representativeClass = validBlocks[0].className;
+            
+            // Get subject for this class based on date
+            const subjectMapU10 = getSubjectMap(selectedDate);
+            const sheet4Lookup = getSheet4Lookup(selectedDate);
+            
+            if (representativeClass.startsWith("11") || representativeClass.startsWith("12")) {
+              // For classes 11-12, try to get subject from first student
+              const firstRoll = validBlocks[0].startRoll;
+              representativeSubject = sheet4Lookup[`${representativeClass}_${firstRoll}`] || "ALL_PRESENT";
+            } else {
+              // For classes up to 10, get subject from subject map
+              representativeSubject = subjectMapU10[representativeClass] || "ALL_PRESENT";
+            }
+          }
+          
           values.push([
             "ALL_PRESENT",
             "ALL_PRESENT",
-            "ALL_PRESENT",
-            "ALL_PRESENT",
+            representativeClass,  // Now contains actual class name, not "ALL_PRESENT"
+            representativeSubject,
             currentRoomNo,
             selectedDate
           ]);
         }
+        
         submitBtn.innerHTML = '⏳ SUBMITTING...';
         submitBtn.disabled = true;
         try {
