@@ -1071,7 +1071,7 @@
         loadSeatingPlan(currentRoomNo, currentDate);
       }
 
-      // ============ SUBMIT ATTENDANCE - FIXED VERSION ============
+      // ============ SUBMIT ATTENDANCE - COMPLETE FIXED VERSION ============
       async function submitAttendance() {
         if (isCurrentSelectionLocked) {
           alert(`❌ Attendance for Room ${currentRoomNo} on ${currentDate} is already submitted and LOCKED.`);
@@ -1099,8 +1099,71 @@
         
         const values = [];
         
-        if (absentList.length > 0) {
-          // If there are absent students, send their details
+        // Get all valid blocks (classes) in this room (excluding BREAK periods)
+        const validBlocks = currentRoomBlocks.filter(block => 
+          !(block.startRoll === 0 && block.endRoll === 0)
+        );
+        
+        // Get subject maps
+        const subjectMapU10 = getSubjectMap(selectedDate);
+        const sheet4Lookup = getSheet4Lookup(selectedDate);
+        
+        // Group absent students by class
+        const absentByClass = {};
+        absentList.forEach(item => {
+          if (!absentByClass[item.className]) {
+            absentByClass[item.className] = [];
+          }
+          absentByClass[item.className].push(item);
+        });
+        
+        // Process each class in the room
+        validBlocks.forEach(block => {
+          const className = block.className;
+          const classAbsentees = absentByClass[className] || [];
+          
+          if (classAbsentees.length > 0) {
+            // This class has absent students - add each absent student's record
+            classAbsentees.forEach(item => {
+              values.push([
+                item.roll.toString(),
+                item.name || '',
+                item.className || '',
+                item.subject || '',
+                currentRoomNo,
+                selectedDate
+              ]);
+            });
+          } else {
+            // This class has ALL STUDENTS PRESENT - add an ALL_PRESENT record for this class
+            
+            // Get subject for this class based on date
+            let classSubject = "ALL_PRESENT";
+            
+            if (className.startsWith("11") || className.startsWith("12")) {
+              // For classes 11-12, try to get subject from first student in this class
+              const firstRoll = block.startRoll;
+              classSubject = sheet4Lookup[`${className}_${firstRoll}`] || "ALL_PRESENT";
+            } else {
+              // For classes up to 10, get subject from subject map
+              classSubject = subjectMapU10[className] || "ALL_PRESENT";
+            }
+            
+            // Add ALL_PRESENT entry for this class
+            values.push([
+              "ALL_PRESENT",
+              "ALL_PRESENT",
+              className,  // Actual class name (e.g., "3 CRE", "3 EXP")
+              classSubject, // Subject for this class
+              currentRoomNo,
+              selectedDate
+            ]);
+          }
+        });
+        
+        // If for some reason no valid blocks found, but there are absent students
+        if (values.length === 0 && absentList.length > 0) {
+          // Fallback: add absent students directly
           absentList.forEach(item => {
             values.push([
               item.roll.toString(),
@@ -1111,39 +1174,13 @@
               selectedDate
             ]);
           });
-        } else {
-          // ALL STUDENTS PRESENT - Get a representative class from the room blocks
-          // Filter out blocks with start=0 AND end=0 (like "BREAK" periods)
-          const validBlocks = currentRoomBlocks.filter(block => 
-            !(block.startRoll === 0 && block.endRoll === 0)
-          );
-          
-          let representativeClass = "UNKNOWN";
-          let representativeSubject = "ALL_PRESENT";
-          
-          if (validBlocks.length > 0) {
-            // Use the first valid class as representative
-            representativeClass = validBlocks[0].className;
-            
-            // Get subject for this class based on date
-            const subjectMapU10 = getSubjectMap(selectedDate);
-            const sheet4Lookup = getSheet4Lookup(selectedDate);
-            
-            if (representativeClass.startsWith("11") || representativeClass.startsWith("12")) {
-              // For classes 11-12, try to get subject from first student
-              const firstRoll = validBlocks[0].startRoll;
-              representativeSubject = sheet4Lookup[`${representativeClass}_${firstRoll}`] || "ALL_PRESENT";
-            } else {
-              // For classes up to 10, get subject from subject map
-              representativeSubject = subjectMapU10[representativeClass] || "ALL_PRESENT";
-            }
-          }
-          
+        } else if (values.length === 0) {
+          // No blocks and no absent students - add generic entry
           values.push([
             "ALL_PRESENT",
             "ALL_PRESENT",
-            representativeClass,  // Now contains actual class name, not "ALL_PRESENT"
-            representativeSubject,
+            "UNKNOWN",
+            "ALL_PRESENT",
             currentRoomNo,
             selectedDate
           ]);
@@ -1174,7 +1211,7 @@
         window.print();
       }
 
-      // ============ MAIN SEATING ENGINE - LAST WORKING VERSION ============
+      // ============ MAIN SEATING ENGINE ============
       async function loadSeatingPlan(roomNo, selectedDate) {
         if (!roomNo || !selectedDate) return;
         console.log(`Loading room: ${roomNo}, date: ${selectedDate}`);
