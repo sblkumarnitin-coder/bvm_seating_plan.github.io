@@ -236,104 +236,125 @@ body{font-family:var(--font);background:var(--cream);color:var(--text);min-heigh
 /* ═══════ MOBILE RESPONSIVE ═══════ */
 @media (max-width: 768px) {
 
-  /* Navbar */
-  .navbar{padding:0 12px;height:56px;gap:8px}
-  .nav-text h1{font-size:.82rem}
+  /* ── Navbar ── */
+  .navbar{padding:0 10px;height:56px;gap:6px}
+  .nav-text h1{font-size:.8rem}
   .nav-text p{display:none}
-  .logo-box{width:38px;height:38px;border-radius:8px}
-  .nav-right{gap:6px}
+  .logo-box{width:36px;height:36px;border-radius:7px}
+  .nav-right{gap:5px}
   .dd-pill{border-radius:6px}
-  .dd-lbl{padding:0 6px 0 8px;font-size:.55rem;letter-spacing:.8px;height:32px}
-  .dd-pill select{font-size:.78rem;padding:0 22px 0 6px;height:32px;min-width:80px}
-  .btn-print{padding:7px 10px;font-size:.75rem}
-  .btn-print span{display:none}
+  .dd-lbl{padding:0 5px 0 8px;font-size:.52rem;letter-spacing:.6px;height:32px}
+  .dd-pill select{font-size:.78rem;padding:0 20px 0 5px;height:32px;min-width:75px}
+  .btn-print{padding:7px 9px;font-size:.74rem;gap:5px}
 
-  /* Stats bar - 3 per row wrap */
+  /* ── Stats bar — 3 columns ── */
   .stats-bar{flex-wrap:wrap}
-  .stat-item{min-width:calc(33.33% - 1px);flex:none;padding:9px 12px;border-bottom:1px solid var(--border)}
-  .stat-item:nth-child(3){border-right:none}
+  .stat-item{
+    flex:none;width:33.333%;
+    padding:8px 10px;
+    border-bottom:1px solid var(--border);
+  }
+  .stat-item:nth-child(3n){border-right:none}
   .stat-item:nth-child(4){border-right:1px solid var(--border)}
-  .stat-item:nth-child(6){border-right:none}
-  .s-val{font-size:1.25rem}
-  .st-pill{font-size:.6rem;padding:2px 8px}
+  .s-val{font-size:1.2rem}
+  .st-pill{font-size:.58rem;padding:2px 7px}
 
-  /* Main layout — stack vertically, seating FIRST */
-  .main{flex-direction:column}
+  /* ── Main: full column, seating on top ── */
+  .main{
+    display:block;   /* no flex — just normal block stacking */
+    width:100%;
+  }
 
-  /* Seating area full width */
+  /* ── Seating area: full width, seating table scrolls horizontally ── */
   .seating-area{
     width:100%;
-    padding:12px 8px 20px 8px;
-    order:1;
+    padding:10px 0 16px 0;
+    position:relative;
+    overflow:hidden;
   }
-  .area-hdr{margin-bottom:10px}
+  .area-hdr{margin-bottom:8px;padding:0 10px}
 
-  /* Seating table — larger cells on mobile */
-  #seatingPlan table{border-spacing:5px;width:100%}
-  #seatingPlan table td{
-    width:calc(50vw - 30px) !important;
-    max-width:180px;
-    height:96px;
-    padding:8px 6px;
-    font-size:.72rem;
+  /* Wrap seating table in horizontal scroll */
+  #seatingPlan{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding:0 6px 8px 6px;
   }
-  .c-roll{font-size:1.05rem}
-  .c-name{font-size:.67rem;max-width:none}
+  #seatingPlan table{
+    border-spacing:5px;
+    margin:0;
+    /* Do NOT set width:100% — let it be as wide as it needs */
+  }
+  /* Make each cell bigger and readable */
+  #seatingPlan table td{
+    width:130px !important;
+    height:100px;
+    padding:8px 6px;
+    font-size:.73rem;
+  }
+  .c-roll{font-size:1.1rem}
+  .c-name{font-size:.67rem;max-width:118px}
   .c-class{font-size:.6rem}
   .c-chip{font-size:.58rem;padding:2px 7px}
 
-  /* Summary table scroll */
-  .summary-sect{overflow-x:auto}
-  .sum-tbl{min-width:480px}
+  /* Summary scrollable */
+  .summary-sect{margin:12px 8px 0 8px;overflow-x:auto}
+  .sum-tbl{min-width:460px}
 
-  /* Sidebar — full width BELOW seating */
+  /* ── Sidebar: full width block BELOW seating, NOT sticky, NOT fixed ── */
   .sidebar{
-    width:100%;
-    position:static;
-    height:auto;
-    max-height:none;
+    width:100% !important;
+    position:static !important;   /* kills sticky */
+    height:auto !important;
+    max-height:none !important;
     border-left:none;
-    border-top:2px solid var(--border);
-    order:2;
+    border-top:3px solid var(--indigo2);
+    overflow:visible;
+    display:block;
   }
-  .sb-scroll{max-height:320px;overflow-y:auto}
+  .sb-hd{padding:12px 14px 10px}
+  .sb-scroll{
+    max-height:280px;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  .sb-actions{
+    padding:10px 12px 14px;
+    position:static;
+  }
+  .act-btn{padding:13px 10px;font-size:.84rem}
 
-  /* Actions bar full width */
-  .sb-actions{padding:10px 12px 14px}
-  .act-btn{padding:12px 10px;font-size:.82rem}
+  /* ── Legend ── */
+  .legend{padding:8px 10px;gap:10px;font-size:.68rem}
 
-  /* Legend wrap */
-  .legend{padding:8px 12px;gap:12px;font-size:.68rem}
-
-  /* Toast center */
-  #tc{width:90vw;left:50%;transform:translate(-50%,-50%)}
+  /* ── Toast ── */
+  #tc{width:88vw}
   .toast{min-width:0;width:100%}
 
-  /* Modal */
+  /* ── Modal ── */
   .modal-box{width:92vw}
+  .modal-body{padding:16px 16px 14px}
+  .modal-footer{padding:10px 16px 16px}
 }
 
-@media (max-width: 480px) {
-  .navbar{padding:0 10px;gap:6px}
-  .nav-text h1{font-size:.75rem}
-  .logo-box{width:34px;height:34px}
+@media (max-width: 420px) {
+  .navbar{padding:0 8px}
+  .nav-text h1{font-size:.72rem}
+  .logo-box{width:32px;height:32px}
   .dd-lbl{display:none}
-  .dd-pill{border-radius:6px}
-  .dd-pill select{padding:0 22px 0 10px;min-width:90px;font-size:.8rem}
-  .btn-print{padding:7px 10px}
+  .dd-pill select{min-width:85px;font-size:.8rem;padding:0 20px 0 8px}
 
-  /* 2-column seating cells on small phones */
   #seatingPlan table td{
-    width:calc(50vw - 22px) !important;
-    height:90px;
-    font-size:.68rem;
+    width:115px !important;
+    height:95px;
   }
   .c-roll{font-size:1rem}
-  .c-name{font-size:.62rem}
+  .c-name{max-width:104px}
 
-  .stat-item{min-width:50%;padding:8px 10px}
+  .stat-item{width:50%}
+  .stat-item:nth-child(3n){border-right:1px solid var(--border)}
   .stat-item:nth-child(2n){border-right:none}
-  .stat-item:nth-child(3){border-right:1px solid var(--border)}
+  .stat-item:nth-child(5){border-right:1px solid var(--border)}
 }
 @media print{
   @page{size:A4 portrait;margin:.6cm}
