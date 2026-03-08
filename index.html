@@ -233,6 +233,108 @@ body{font-family:var(--font);background:var(--cream);color:var(--text);min-heigh
 .modal-confirm:active{transform:translateY(0)}
 
 .print-hdr{display:none}
+/* ═══════ MOBILE RESPONSIVE ═══════ */
+@media (max-width: 768px) {
+
+  /* Navbar */
+  .navbar{padding:0 12px;height:56px;gap:8px}
+  .nav-text h1{font-size:.82rem}
+  .nav-text p{display:none}
+  .logo-box{width:38px;height:38px;border-radius:8px}
+  .nav-right{gap:6px}
+  .dd-pill{border-radius:6px}
+  .dd-lbl{padding:0 6px 0 8px;font-size:.55rem;letter-spacing:.8px;height:32px}
+  .dd-pill select{font-size:.78rem;padding:0 22px 0 6px;height:32px;min-width:80px}
+  .btn-print{padding:7px 10px;font-size:.75rem}
+  .btn-print span{display:none}
+
+  /* Stats bar - 3 per row wrap */
+  .stats-bar{flex-wrap:wrap}
+  .stat-item{min-width:calc(33.33% - 1px);flex:none;padding:9px 12px;border-bottom:1px solid var(--border)}
+  .stat-item:nth-child(3){border-right:none}
+  .stat-item:nth-child(4){border-right:1px solid var(--border)}
+  .stat-item:nth-child(6){border-right:none}
+  .s-val{font-size:1.25rem}
+  .st-pill{font-size:.6rem;padding:2px 8px}
+
+  /* Main layout — stack vertically, seating FIRST */
+  .main{flex-direction:column}
+
+  /* Seating area full width */
+  .seating-area{
+    width:100%;
+    padding:12px 8px 20px 8px;
+    order:1;
+  }
+  .area-hdr{margin-bottom:10px}
+
+  /* Seating table — larger cells on mobile */
+  #seatingPlan table{border-spacing:5px;width:100%}
+  #seatingPlan table td{
+    width:calc(50vw - 30px) !important;
+    max-width:180px;
+    height:96px;
+    padding:8px 6px;
+    font-size:.72rem;
+  }
+  .c-roll{font-size:1.05rem}
+  .c-name{font-size:.67rem;max-width:none}
+  .c-class{font-size:.6rem}
+  .c-chip{font-size:.58rem;padding:2px 7px}
+
+  /* Summary table scroll */
+  .summary-sect{overflow-x:auto}
+  .sum-tbl{min-width:480px}
+
+  /* Sidebar — full width BELOW seating */
+  .sidebar{
+    width:100%;
+    position:static;
+    height:auto;
+    max-height:none;
+    border-left:none;
+    border-top:2px solid var(--border);
+    order:2;
+  }
+  .sb-scroll{max-height:320px;overflow-y:auto}
+
+  /* Actions bar full width */
+  .sb-actions{padding:10px 12px 14px}
+  .act-btn{padding:12px 10px;font-size:.82rem}
+
+  /* Legend wrap */
+  .legend{padding:8px 12px;gap:12px;font-size:.68rem}
+
+  /* Toast center */
+  #tc{width:90vw;left:50%;transform:translate(-50%,-50%)}
+  .toast{min-width:0;width:100%}
+
+  /* Modal */
+  .modal-box{width:92vw}
+}
+
+@media (max-width: 480px) {
+  .navbar{padding:0 10px;gap:6px}
+  .nav-text h1{font-size:.75rem}
+  .logo-box{width:34px;height:34px}
+  .dd-lbl{display:none}
+  .dd-pill{border-radius:6px}
+  .dd-pill select{padding:0 22px 0 10px;min-width:90px;font-size:.8rem}
+  .btn-print{padding:7px 10px}
+
+  /* 2-column seating cells on small phones */
+  #seatingPlan table td{
+    width:calc(50vw - 22px) !important;
+    height:90px;
+    font-size:.68rem;
+  }
+  .c-roll{font-size:1rem}
+  .c-name{font-size:.62rem}
+
+  .stat-item{min-width:50%;padding:8px 10px}
+  .stat-item:nth-child(2n){border-right:none}
+  .stat-item:nth-child(3){border-right:1px solid var(--border)}
+}
 @media print{
   @page{size:A4 portrait;margin:.6cm}
   body{background:white}
