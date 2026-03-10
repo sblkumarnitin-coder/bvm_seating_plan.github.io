@@ -412,7 +412,7 @@
         @media print {
             @page { size:A4 portrait; margin:.6cm; }
             body { background:white; }
-            .school-header,.header-divider,.container>.control-panel,.container>.stats-bar,.container>.legend,.sidebar,.ld-wrap,#tc { display:none!important; }
+            .school-header,.header-divider,.container>.control-panel,.container>.stats-bar,.container>.legend,.sidebar,.ld-wrap,#tc,.teacher-panel,.tp-login-overlay { display:none!important; }
             .print-hdr { display:flex!important; align-items:center; gap:14px; padding-bottom:10px; border-bottom:2px solid #222; margin-bottom:12px; }
             .print-hdr img { width:50px; height:50px; object-fit:contain; }
             .print-hdr h1 { font-family:var(--font-d); font-size:1.25rem; color:#000; margin:0; }
@@ -468,6 +468,210 @@
             .stat-item:nth-child(2n){ border-right:none; }
             .stat-item:nth-child(5){ border-right:1px solid var(--border); }
         }
+
+        /* ══════════════════════════════════
+           TEACHER PANEL
+        ══════════════════════════════════ */
+
+        /* Login overlay */
+        .tp-login-overlay {
+            position:fixed; inset:0; z-index:200;
+            background:rgba(12,10,9,.82); backdrop-filter:blur(8px);
+            display:flex; align-items:center; justify-content:center;
+            opacity:0; pointer-events:none; transition:opacity .3s;
+        }
+        .tp-login-overlay.show { opacity:1; pointer-events:all; }
+        .tp-login-box {
+            background:var(--ink3); border:1px solid var(--border);
+            border-radius:16px; width:420px; max-width:92vw;
+            box-shadow:0 24px 64px rgba(0,0,0,.6), 0 0 0 1px var(--border);
+            overflow:hidden;
+            transform:translateY(20px) scale(.97);
+            transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+        }
+        .tp-login-overlay.show .tp-login-box { transform:translateY(0) scale(1); }
+        .tp-login-head {
+            background:var(--ink2); padding:18px 22px;
+            border-bottom:1px solid var(--border);
+            display:flex; align-items:center; gap:12px;
+        }
+        .tp-login-icon {
+            width:40px; height:40px; border-radius:50%;
+            background:rgba(201,168,76,.12); border:1px solid var(--gold);
+            display:flex; align-items:center; justify-content:center; flex-shrink:0;
+        }
+        .tp-login-title { font-family:var(--font-d); font-size:1.15rem; color:var(--gold2); font-weight:600; }
+        .tp-login-sub   { font-size:.66rem; color:var(--text3); margin-top:3px; }
+        .tp-login-body  { padding:24px 22px; }
+        .tp-login-field { margin-bottom:18px; }
+        .tp-login-field label {
+            display:block; font-size:.6rem; font-weight:700;
+            letter-spacing:2px; text-transform:uppercase;
+            color:var(--gold); margin-bottom:7px;
+        }
+        .tp-login-field select {
+            width:100%; padding:11px 36px 11px 14px;
+            border:1px solid rgba(201,168,76,.3); border-radius:8px;
+            font-size:.9rem; font-weight:500; font-family:var(--font);
+            color:var(--ivory); background:var(--ink2);
+            outline:none; transition:border-color .2s, box-shadow .2s;
+            appearance:none;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%23c9a84c' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat:no-repeat; background-position:right 12px center; cursor:pointer;
+        }
+        .tp-login-field select option { background:var(--ink2); color:var(--ivory); }
+        .tp-login-field select:focus { border-color:var(--gold); box-shadow:0 0 0 3px var(--gold-glow); }
+        .tp-login-note {
+            background:rgba(201,168,76,.08); border:1px solid var(--border2);
+            border-radius:8px; padding:10px 14px; margin-bottom:18px;
+            font-size:.72rem; color:var(--text3); line-height:1.6;
+        }
+        .tp-login-note strong { color:var(--gold2); }
+        .tp-login-btn {
+            width:100%; padding:13px; border:none; border-radius:8px;
+            background:var(--gold); color:var(--ink2);
+            font-family:var(--font); font-size:.88rem; font-weight:700;
+            cursor:pointer; transition:all .2s; letter-spacing:.3px;
+            box-shadow:0 2px 10px rgba(201,168,76,.35);
+            display:flex; align-items:center; justify-content:center; gap:8px;
+        }
+        .tp-login-btn:hover { background:var(--gold2); transform:translateY(-1px); box-shadow:0 4px 16px rgba(201,168,76,.45); }
+        .tp-login-btn:disabled { opacity:.4; cursor:not-allowed; transform:none; }
+
+        /* Panel itself */
+        .teacher-panel {
+            margin-top:28px; background:var(--ink2);
+            border:1px solid var(--border); border-radius:var(--r);
+            overflow:hidden; box-shadow:var(--gsh);
+        }
+        .tp-header {
+            background:var(--ink3); border-bottom:1px solid var(--border);
+            padding:13px 20px;
+            display:flex; align-items:center; justify-content:space-between; gap:12px;
+            flex-wrap:wrap;
+        }
+        .tp-title {
+            font-family:var(--font-d); font-size:1.05rem;
+            color:var(--gold2); font-weight:600;
+            display:flex; align-items:center; gap:8px;
+        }
+        .tp-title::before { content:''; width:3px; height:14px; background:var(--gold); border-radius:2px; display:block; }
+        .tp-subtitle { font-size:.67rem; color:var(--text3); margin-top:3px; }
+        .tp-teacher-pill {
+            display:flex; align-items:center; gap:8px;
+            background:rgba(201,168,76,.1); border:1px solid var(--border);
+            border-radius:99px; padding:5px 14px 5px 8px;
+        }
+        .tp-teacher-avatar {
+            width:26px; height:26px; border-radius:50%;
+            background:var(--gold); color:var(--ink2);
+            display:flex; align-items:center; justify-content:center;
+            font-size:.75rem; font-weight:700; flex-shrink:0;
+        }
+        .tp-teacher-name { font-size:.78rem; font-weight:600; color:var(--ivory); }
+        .tp-switch-btn {
+            background:none; border:none; padding:0;
+            font-size:.65rem; color:var(--text3); cursor:pointer;
+            text-decoration:underline; font-family:var(--font);
+            transition:color .15s;
+        }
+        .tp-switch-btn:hover { color:var(--gold); }
+
+        .tp-body { padding:18px 20px; }
+        .tp-selector-row {
+            display:flex; gap:12px; align-items:flex-end;
+            flex-wrap:wrap; margin-bottom:20px;
+        }
+        .tp-field { display:flex; flex-direction:column; gap:5px; }
+        .tp-field label {
+            font-size:.58rem; font-weight:700; letter-spacing:2px;
+            text-transform:uppercase; color:var(--gold);
+        }
+        .tp-field select, .tp-field input {
+            padding:9px 14px; border:1px solid rgba(201,168,76,.3); border-radius:7px;
+            font-size:.85rem; font-weight:500; font-family:var(--font);
+            color:var(--ivory); background:var(--ink3);
+            outline:none; transition:border-color .2s, box-shadow .2s; min-width:160px;
+        }
+        .tp-field select {
+            appearance:none;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%23c9a84c' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat:no-repeat; background-position:right 10px center;
+            padding-right:34px; cursor:pointer;
+        }
+        .tp-field select option { background:var(--ink2); color:var(--ivory); }
+        .tp-field select:focus, .tp-field input:focus { border-color:var(--gold); box-shadow:0 0 0 3px var(--gold-glow); }
+        .tp-load-btn {
+            background:var(--gold); color:var(--ink2); border:none; border-radius:7px;
+            padding:10px 20px; font-family:var(--font); font-size:.8rem; font-weight:700;
+            cursor:pointer; transition:all .2s; align-self:flex-end;
+            box-shadow:0 2px 8px rgba(201,168,76,.3); letter-spacing:.3px;
+            display:flex; align-items:center; gap:6px;
+        }
+        .tp-load-btn:hover { background:var(--gold2); transform:translateY(-1px); }
+        .tp-load-btn:disabled { opacity:.4; cursor:not-allowed; transform:none; }
+
+        /* Grid */
+        .tp-grid-wrap { margin-bottom:16px; }
+        .tp-grid-header, .tp-grid-row {
+            display:grid;
+            grid-template-columns: 1.4fr 1.6fr 70px 70px 70px 70px;
+            gap:10px; align-items:center;
+            padding:9px 14px;
+        }
+        .tp-grid-header {
+            background:var(--ink2); border-radius:8px 8px 0 0;
+            border:1px solid var(--border); border-bottom:none;
+        }
+        .tp-grid-header span {
+            font-size:.57rem; font-weight:700; letter-spacing:1.5px;
+            text-transform:uppercase;
+        }
+        .tp-grid-row {
+            background:var(--ink3); border:1px solid var(--border2);
+            border-top:none; transition:background .12s;
+        }
+        .tp-grid-row:last-child { border-radius:0 0 8px 8px; border-bottom:1px solid var(--border2); }
+        .tp-grid-row:hover { background:rgba(201,168,76,.04); }
+        .tp-cls-name { font-family:var(--font-d); font-size:1rem; color:var(--gold2); font-weight:600; }
+        .tp-cls-subj { font-size:.67rem; color:var(--text3); margin-top:1px; }
+        .tp-sys-total { font-size:.82rem; color:var(--ivory); }
+        .tp-sys-total small { display:block; font-size:.58rem; color:var(--text3); margin-bottom:1px; }
+
+        /* Number inputs in grid */
+        .tp-n { display:flex; flex-direction:column; gap:3px; }
+        .tp-n small { font-size:.55rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+        .tp-n input {
+            width:100%; padding:7px 6px; border-radius:6px;
+            border:1px solid rgba(201,168,76,.2); background:var(--ink2);
+            color:var(--ivory); font-family:var(--font); font-size:.88rem;
+            font-weight:600; text-align:center; outline:none;
+            transition:border-color .2s, box-shadow .2s; min-width:unset;
+        }
+        .tp-n input:focus { border-color:var(--gold); box-shadow:0 0 0 2px var(--gold-glow); }
+        .tp-n.recv  input { border-color:rgba(29,78,137,.4); }
+        .tp-n.recv  input:focus { border-color:#3b82f6; box-shadow:0 0 0 2px rgba(59,130,246,.2); }
+        .tp-n.chk   input:focus { border-color:var(--teal); box-shadow:0 0 0 2px rgba(15,118,110,.2); }
+        .tp-n.erp   input { border-color:rgba(124,58,237,.3); }
+        .tp-n.erp   input:focus { border-color:#7c3aed; box-shadow:0 0 0 2px rgba(124,58,237,.2); }
+
+        .tp-empty {
+            padding:30px; text-align:center; color:var(--text3); font-size:.85rem;
+        }
+        .tp-empty svg { opacity:.2; display:block; margin:0 auto 10px; }
+
+        .tp-submit-row { display:flex; justify-content:space-between; align-items:center; gap:10px; padding-top:6px; flex-wrap:wrap; }
+        .tp-last-saved { font-size:.68rem; color:var(--text3); }
+        .tp-last-saved strong { color:var(--gold2); }
+        .tp-submit-btn {
+            background:var(--gold); color:var(--ink2); border:none; border-radius:7px;
+            padding:11px 28px; font-family:var(--font); font-size:.85rem; font-weight:700;
+            cursor:pointer; transition:all .2s;
+            box-shadow:0 2px 10px rgba(201,168,76,.35); letter-spacing:.3px;
+            display:flex; align-items:center; gap:7px;
+        }
+        .tp-submit-btn:hover:not(:disabled) { background:var(--gold2); transform:translateY(-1px); box-shadow:0 4px 16px rgba(201,168,76,.45); }
+        .tp-submit-btn:disabled { opacity:.4; cursor:not-allowed; transform:none; }
     </style>
 </head>
 <body>
@@ -633,6 +837,84 @@
         </aside>
     </div>
 
+    <!-- ══ TEACHER LOGIN OVERLAY ══ -->
+    <div class="tp-login-overlay" id="tpLoginOverlay">
+        <div class="tp-login-box">
+            <div class="tp-login-head">
+                <div class="tp-login-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div>
+                    <div class="tp-login-title">Teacher Login</div>
+                    <div class="tp-login-sub">Select your name to access your script tracking panel</div>
+                </div>
+            </div>
+            <div class="tp-login-body">
+                <div class="tp-login-field">
+                    <label>Your Name</label>
+                    <select id="tpLoginSelect">
+                        <option value="">— Loading teachers... —</option>
+                    </select>
+                </div>
+                <div class="tp-login-note">
+                    <strong>Note:</strong> Your selection will be remembered on this device. You can switch accounts anytime using the panel header.
+                </div>
+                <button class="tp-login-btn" id="tpLoginBtn" disabled>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                    Continue as this Teacher
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ TEACHER PANEL ══ -->
+    <div class="teacher-panel" id="teacherPanel">
+        <div class="tp-header" id="tpHeaderRow" style="cursor:pointer" onclick="tpTogglePanel()">
+            <div>
+                <div class="tp-title">Script Checking Progress</div>
+                <div class="tp-subtitle" id="tpPanelSubtitle">Click to open — Teachers update checked &amp; ERP counts here</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+                <div class="tp-teacher-pill" id="tpTeacherPill" style="display:none" onclick="event.stopPropagation()">
+                    <div class="tp-teacher-avatar" id="tpAvatar">?</div>
+                    <div class="tp-teacher-name" id="tpNameDisplay">—</div>
+                    <button class="tp-switch-btn" id="tpSwitchBtn" onclick="event.stopPropagation();tpDoSwitch()">Switch</button>
+                </div>
+                <div id="tpChevron" style="color:var(--gold);transition:transform .25s;flex-shrink:0">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+            </div>
+        </div>
+        <div class="tp-body" id="tpPanelBody" style="display:none">
+            <div class="tp-selector-row">
+                <div class="tp-field">
+                    <label>Exam Date</label>
+                    <select id="tpDate"><option value="">— Select Date —</option></select>
+                </div>
+                <button class="tp-load-btn" id="tpLoadBtn">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Load My Classes
+                </button>
+            </div>
+
+            <div id="tpClassesWrap">
+                <div class="tp-empty">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <p>Select an exam date above, then click <strong style="color:var(--gold)">Load My Classes</strong></p>
+                </div>
+            </div>
+
+            <div class="tp-submit-row" id="tpSubmitRow" style="display:none">
+                <div class="tp-last-saved" id="tpLastSaved"></div>
+                <button class="tp-submit-btn" id="tpSubmitBtn">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22 11 13 2 9l20-7z"/></svg>
+                    Save Progress
+                </button>
+            </div>
+        </div>
+    </div>
+
+
 </div><!-- /container -->
 
 <script>
@@ -641,7 +923,7 @@
 var SHEET_ID="1PdwXDCW20w8qlW8yVbGyz4NuzV-il2wKsOUPQgW0J7E";
 var API_KEY="AIzaSyA8IuP2YVIxNZlZYwbBMePjhRFKjicfWlg";
 var SUBMIT_SHEET_ID="1dL-YdDxdF778Vnut90Rd2cRLQ_B7tlMKL1BsyXp0EYE";
-var APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbz663BG5IlGsWTC9Ay6Vy0tfNEIWk_sKFn9qIBizcebOUUMOtKBTkLexAFmMLiUqRM/exec";
+var APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbwrGctMFWczVm3sgRY-T07OuAR9aRW8dhOMzFooOfuWscfcjTkpYfhlI7l8uV7Tons/exec";
 var roomDD=document.getElementById("roomDropdown"),dateDD=document.getElementById("examDate"),seatDiv=document.getElementById("seatingPlan"),attBody=document.getElementById("attendanceBody"),absBadge=document.getElementById("absentCount"),resetBtn=document.getElementById("resetAttendanceBtn"),subBtn=document.getElementById("submitAttendanceBtn"),printBtn=document.getElementById("printBtn"),sumBody=document.getElementById("summaryBody"),lockPill=document.getElementById("lockPill"),lockTxt=document.getElementById("lockTxt"),ldWrap=document.getElementById("loadingOverlay"),sRoom=document.getElementById("statRoom"),sDate=document.getElementById("statDate"),sTotal=document.getElementById("statTotal"),sPresent=document.getElementById("statPresent"),sAbsent=document.getElementById("statAbsent"),sNoExam=document.getElementById("statNoExam"),pRoom=document.getElementById("printRoom"),pDate=document.getElementById("printDate");
 var absList=[],curBlocks=[],curRoom="",curDate="",locked=false,sh1=null,sh2=null,sh3=null,sh4=null,noExamCnt=0,examByClass={};
 function toast(type,title,msg,dur){dur=dur||3500;var icons={success:"v",error:"x",info:"i",warning:"!"};var tc=document.getElementById("tc");var el=document.createElement("div");el.className="toast "+type;el.innerHTML='<div class="t-ico">'+(icons[type]||"i")+'</div><div class="t-bdy"><div class="t-ttl">'+title+"</div>"+(msg?'<div class="t-msg">'+msg+"</div>":"")+"</div>";tc.appendChild(el);setTimeout(function(){el.classList.add("out");setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},300);},dur);}
@@ -660,7 +942,7 @@ function updateStats(){var total=0;for(var i=0;i<curBlocks.length;i++)total+=cur
 function renderSum(){if(!curBlocks||!curBlocks.length){sumBody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--slate);padding:18px">No class data</td></tr>';return;}var filtered=curBlocks.filter(function(b){return!(b.startRoll===0&&b.endRoll===0);});if(!filtered.length){sumBody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--slate);padding:18px">No valid data</td></tr>';return;}var tS=0,tA=0,tP=0,html="";filtered.forEach(function(b){var total=(examByClass[b.className]!==undefined)?examByClass[b.className]:b.totalStudents;if(total===0)return;var abs=0;for(var i=0;i<absList.length;i++){if(absList[i].className===b.className)abs++;}var pres=total-abs;tS+=total;tA+=abs;tP+=pres;html+="<tr><td><strong>"+b.className+"</strong></td><td>"+b.startRoll+"</td><td>"+b.endRoll+"</td><td>"+b.endRoll+"</td><td>"+total+'</td><td class="td-r">'+abs+'</td><td class="td-g">'+pres+"</td></tr>";});if(!html){sumBody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--slate);padding:18px">No students with exam today</td></tr>';updateStats();return;}html+='<tr><td colspan="4"><strong>TOTAL</strong></td><td><strong>'+tS+'</strong></td><td class="td-r"><strong>'+tA+'</strong></td><td class="td-g"><strong>'+tP+"</strong></td></tr>";sumBody.innerHTML=html;updateStats();}
 function cellHTML(roll,name,cls,subj){return'<span class="c-roll">'+roll+'</span><span class="c-name">'+(name||"")+'</span><span class="c-class">'+cls+'</span><span class="c-chip"><span class="c-dot"></span>'+subj+"</span>";}
 function toggle(cell,sd){if(locked){toast("warning","Locked","Already submitted.");return;}var idx=-1;for(var i=0;i<absList.length;i++){if(String(absList[i].roll)===String(sd.roll)&&absList[i].className===sd.className){idx=i;break;}}if(cell.classList.contains("absent")){cell.classList.remove("absent");cell.classList.add("present");cell.innerHTML=sd.origHTML;if(idx!==-1)absList.splice(idx,1);toast("success","Marked Present","Roll "+sd.roll);}else{cell.classList.remove("present");cell.classList.add("absent");sd.origHTML=cell.innerHTML;cell.innerHTML=cellHTML(sd.roll,sd.name,sd.className,sd.subject);if(idx===-1)absList.push({roll:String(sd.roll),name:sd.name||"",className:sd.className,subject:sd.subject,room:curRoom,date:curDate});toast("error","Marked Absent","Roll "+sd.roll);}absBadge.classList.remove("bump");void absBadge.offsetWidth;absBadge.classList.add("bump");setTimeout(function(){absBadge.classList.remove("bump");},200);renderAtt();renderSum();}
-function renderAtt(forceSubmitted){absBadge.textContent=absList.length;if(!absList.length){attBody.innerHTML='<tr><td colspan="5"><div class="empty-st" style="padding:34px 14px"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><p><strong>All present</strong><br>No absences marked</p></div></td></tr>';return;}var isSubmitted=(forceSubmitted===true)||locked;var chipLabel=isSubmitted?"Submitted":"Absent";var chipStyle=isSubmitted?'style="background:var(--teal-lt);color:var(--teal);border-color:#a7d9d4"':'';var h="";absList.forEach(function(it){h+="<tr><td><span class=\"roll-no\">"+it.roll+"</span></td><td>"+(it.name||"-")+'</td><td style="color:var(--slate)">'+it.className+'</td><td style="color:var(--slate)">'+(it.subject||"-")+'</td><td><span class="abs-chip" '+chipStyle+">"+chipLabel+"</span></td></tr>";});attBody.innerHTML=h;}
+function renderAtt(forceSubmitted){absBadge.textContent=absList.length;if(!absList.length){attBody.innerHTML='<tr><td colspan="5"><div class="empty-st" style="padding:34px 14px"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><p><strong>All present</strong><br>No absences marked</p></div></td></tr>';return;}var isSubmitted=(forceSubmitted===true)||locked;var chipLabel=isSubmitted?"Submitted":"Absent";var chipStyle=isSubmitted?'style="background:var(--teal-lt);color:var(--teal);border-color:#a7d9d4"':'';var h="";absList.forEach(function(it){h+="<tr><td><span class=\"roll-no\">"+it.roll+"</span></td><td>"+(it.name||"-")+"</td><td style=\"color:var(--gold2);font-weight:600\">"+it.className+"</td><td style=\"color:var(--ivory)\">"+  (it.subject||"-")+"</td><td><span class=\"abs-chip\" "+chipStyle+">"+chipLabel+"</span></td></tr>";});attBody.innerHTML=h;}
 function doReset(){if(locked){toast("warning","Locked","Cannot reset.");return;}absList=[];loadPlan(curRoom,curDate);toast("info","Reset","All marks cleared.");}
 function doSubmit(){if(locked){toast("warning","Already submitted","Room "+curRoom+" is locked.");return;}var date=dateDD.value;var opts=Array.prototype.slice.call(dateDD.options).map(function(o){return o.value;});var di=opts.indexOf(date);if(di===-1){toast("error","Invalid date","Select a valid date.");return;}var sn="p"+(di+1);checkSubmitted(curRoom,date).then(function(already){if(already){toast("warning","Already submitted","Locked.");doLock(true);return;}
 /* Show custom modal */
@@ -697,7 +979,7 @@ function onConfirm(){
   // If room has no classes at all (shouldn't happen), fallback
   if(vals.length === 0) vals = [["ALL_PRESENT","ALL_PRESENT","ALL_PRESENT","ALL_PRESENT",curRoom,date]];
   var orig=subBtn.innerHTML;subBtn.disabled=true;subBtn.textContent="Submitting...";
-  fetch(APPS_SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify({sheetName:sn,values:vals})}).then(function(){doLock(true);renderAtt(true);
+  fetch(APPS_SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify({sheetName:sn,values:vals})}).then(function(){doLock(true);renderAtt(true);
   subBtn.textContent="✓ Submitted";subBtn.style.background="var(--green)";subBtn.style.borderColor="var(--green)";
   toast("success","Submitted Successfully!","Room "+curRoom+" attendance locked.",5000);}).catch(function(e){toast("error","Failed",e.message);subBtn.innerHTML=orig;subBtn.disabled=false;});
 }
@@ -714,6 +996,460 @@ subBtn.addEventListener("click",doSubmit);
 printBtn.addEventListener("click",function(){window.print();});
 window.addEventListener("load",function(){loadRooms().then(loadDates).then(cacheAll).then(function(){if(roomDD.options.length>0)roomDD.selectedIndex=0;if(dateDD.options.length>0)dateDD.selectedIndex=0;if(roomDD.value&&dateDD.value)return loadPlan(roomDD.value,dateDD.value);}).catch(function(e){toast("error","Init failed",e.message);console.error(e);});});
 }());
-</script>
-</body>
+
+/* ══════════════════════════════════════════
+   TEACHER PANEL JS
+══════════════════════════════════════════ */
+(function(){
+"use strict";
+
+var TEACHER_SHEET = "teacher_progress";
+var LS_KEY        = "bvm_teacher_name";
+
+/* DOM refs */
+var loginOverlay  = document.getElementById("tpLoginOverlay");
+var loginSelect   = document.getElementById("tpLoginSelect");
+var loginBtn      = document.getElementById("tpLoginBtn");
+var tpPill        = document.getElementById("tpTeacherPill");
+var tpAvatar      = document.getElementById("tpAvatar");
+var tpNameDisplay = document.getElementById("tpNameDisplay");
+var tpSwitchBtn   = document.getElementById("tpSwitchBtn");
+var tpDate        = document.getElementById("tpDate");
+var tpLoadBtn     = document.getElementById("tpLoadBtn");
+var tpWrap        = document.getElementById("tpClassesWrap");
+var tpSubmitRow   = document.getElementById("tpSubmitRow");
+var tpSubmitBtn   = document.getElementById("tpSubmitBtn");
+var tpLastSaved   = document.getElementById("tpLastSaved");
+
+var _API = "AIzaSyA8IuP2YVIxNZlZYwbBMePjhRFKjicfWlg";
+var _WBA = "1PdwXDCW20w8qlW8yVbGyz4NuzV-il2wKsOUPQgW0J7E";
+var _WBB = "1dL-YdDxdF778Vnut90Rd2cRLQ_B7tlMKL1BsyXp0EYE";
+var _APS = "https://script.google.com/macros/s/AKfycbwrGctMFWczVm3sgRY-T07OuAR9aRW8dhOMzFooOfuWscfcjTkpYfhlI7l8uV7Tons/exec";
+
+var currentTeacher = "";
+var sheet6Raw = null, sheet4Raw = null, sheet2Raw = null, sheet3Raw = null;
+
+/* ── helpers ── */
+function tpFetch(url){ return fetch(url).then(function(r){return r.json();}); }
+
+function tpToast(type, title, msg){
+  var icons = {success:"✓", error:"✗", info:"i", warning:"!"};
+  var tc = document.getElementById("tc");
+  var el = document.createElement("div");
+  el.className = "toast " + type;
+  el.innerHTML = '<div class="t-ico">'+(icons[type]||"i")+'</div><div class="t-bdy"><div class="t-ttl">'+title+"</div>"+(msg?'<div class="t-msg">'+msg+"</div>":"")+"</div>";
+  tc.appendChild(el);
+  setTimeout(function(){ el.classList.add("out"); setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 300); }, 4500);
+}
+
+/* ── sheet loading ── */
+function tpLoadSheets(){
+  var p = [];
+  if(!sheet6Raw) p.push(tpFetch("https://sheets.googleapis.com/v4/spreadsheets/"+_WBA+"/values/Sheet6?key="+_API).then(function(d){sheet6Raw=d;}));
+  if(!sheet4Raw) p.push(tpFetch("https://sheets.googleapis.com/v4/spreadsheets/"+_WBA+"/values/Sheet4?key="+_API).then(function(d){sheet4Raw=d;}));
+  if(!sheet2Raw) p.push(tpFetch("https://sheets.googleapis.com/v4/spreadsheets/"+_WBA+"/values/Sheet2?key="+_API).then(function(d){sheet2Raw=d;}));
+  if(!sheet3Raw) p.push(tpFetch("https://sheets.googleapis.com/v4/spreadsheets/"+_WBA+"/values/Sheet3?key="+_API).then(function(d){sheet3Raw=d;}));
+  return Promise.all(p);
+}
+
+/* ── populate date dropdown — copy from attendance dateDD (already correct) ── */
+function tpPopulateDates(){
+  var srcDD = document.getElementById("examDate");
+  tpDate.innerHTML = '<option value="">— Select Date —</option>';
+  if(srcDD && srcDD.options.length > 1){
+    for(var i=0; i<srcDD.options.length; i++){
+      var v = srcDD.options[i].value;
+      if(v && v.trim()){
+        var o = document.createElement("option");
+        o.value = v.trim(); o.textContent = v.trim();
+        tpDate.appendChild(o);
+      }
+    }
+  } else if(sheet2Raw && sheet2Raw.values){
+    /* fallback: dates are in row1 from col B (index 1+) */
+    var row = sheet2Raw.values[0]||[];
+    for(var j=1; j<row.length; j++){
+      var d = row[j] && row[j].toString().trim();
+      if(d){
+        var o = document.createElement("option");
+        o.value = d; o.textContent = d;
+        tpDate.appendChild(o);
+      }
+    }
+  }
+}
+
+/* ── populate login select (all unique teachers from Sheet6 cols 11+) ── */
+function tpPopulateLoginSelect(){
+  if(!sheet6Raw||!sheet6Raw.values) return;
+  var rows = sheet6Raw.values, hdr = rows[0]||[];
+  var seen = {};
+  for(var r=1; r<rows.length; r++){
+    var row = rows[r];
+    for(var c=11; c<hdr.length; c++){
+      var cellVal = row[c]&&row[c].trim();
+      if(!cellVal) continue;
+      // Split comma-separated teacher names in one cell
+      cellVal.split(",").forEach(function(t){
+        var name = t.trim();
+        if(name) seen[name] = true;
+      });
+    }
+  }
+  loginSelect.innerHTML = '<option value="">— Select your name —</option>';
+  Object.keys(seen).sort().forEach(function(t){
+    var o = document.createElement("option");
+    o.value = t; o.textContent = t;
+    loginSelect.appendChild(o);
+  });
+  loginSelect.disabled = false;
+}
+
+/* ── login flow ── */
+function showLogin(){
+  loginOverlay.classList.add("show");
+}
+function hideLogin(){
+  loginOverlay.classList.remove("show");
+}
+function setTeacher(name){
+  currentTeacher = name;
+  try{ localStorage.setItem(LS_KEY, name); }catch(e){}
+  tpNameDisplay.textContent = name;
+  tpAvatar.textContent = name.charAt(0).toUpperCase();
+  tpPill.style.display = "flex";
+  hideLogin();
+  tpToast("success", "Welcome, "+name.split(" ")[0]+"!", "Select an exam date and load your classes.");
+}
+
+loginSelect.addEventListener("change", function(){
+  loginBtn.disabled = !loginSelect.value;
+});
+loginBtn.addEventListener("click", function(){
+  if(loginSelect.value) setTeacher(loginSelect.value);
+});
+/* Switch handled by tpDoSwitch() */
+
+/* ── system total from Sheet4 / Sheet3 ── */
+function tpGetSysTotal(className, subject, date){
+  var isHigh = className.indexOf("11")===0 || className.indexOf("12")===0;
+  if(isHigh){
+    if(!sheet4Raw||!sheet4Raw.values) return 0;
+    var rows=sheet4Raw.values, hdr=rows[0]||[], di=-1;
+    for(var i=1;i<hdr.length;i++){ if(hdr[i]&&hdr[i].trim()===date){di=i;break;} }
+    if(di===-1) return 0;
+    var cnt=0, sn=subject.toUpperCase();
+    for(var r=1;r<rows.length;r++){
+      var row=rows[r];
+      var cls=row[5]&&row[5].toString().trim();
+      var subj=row[di]&&row[di].toString().trim().toUpperCase();
+      if(cls===className && subj && (subj===sn||subj.indexOf(sn)!==-1||sn.indexOf(subj)!==-1)) cnt++;
+    }
+    return cnt;
+  } else {
+    if(!sheet3Raw||!sheet3Raw.values) return 0;
+    var cnt=0;
+    for(var r=1;r<sheet3Raw.values.length;r++){
+      var row=sheet3Raw.values[r];
+      if(row[5]&&row[5].toString().trim()===className) cnt++;
+    }
+    return cnt;
+  }
+}
+
+/* ── load existing saved progress ── */
+function tpLoadExisting(teacher, date){
+  return tpFetch("https://sheets.googleapis.com/v4/spreadsheets/"+_WBB+"/values/teacher_progress!A:I?key="+_API)
+    .then(function(d){
+      var map = {};
+      if(d.values&&d.values.length>1){
+        for(var i=1; i<d.values.length; i++){
+          var row = d.values[i];
+          // cols: Teacher|Date|Class|Subject|SysTotal|Received|Checked|ERP|Timestamp
+          if(row[0]===teacher && row[1]===date){
+            var key = (row[2]||'') + '||' + (row[3]||'');
+            map[key] = { received:row[5]||"", checked:row[6]||"", erp:row[7]||"", ts:row[8]||"" };
+          }
+        }
+      }
+      return map;
+    }).catch(function(){ return {}; });
+}
+
+/* ── build the class grid ── */
+function tpBuildGrid(teacher, date, existingMap){
+  if(!sheet6Raw||!sheet6Raw.values){
+    tpWrap.innerHTML = '<div class="tp-empty"><p>Sheet6 not loaded.</p></div>';
+    return;
+  }
+  var rows = sheet6Raw.values, hdr = rows[0]||[];
+
+  // Teacher cols for this date (index 11+)
+  var tCols = {};
+  for(var c=11; c<hdr.length; c++){
+    if(hdr[c]&&hdr[c].trim()===date) tCols[c] = true;
+  }
+  // Subject col for this date (index 1-10)
+  var sCo = -1;
+  for(var c=1; c<=10&&c<hdr.length; c++){
+    if(hdr[c]&&hdr[c].trim()===date){ sCo=c; break; }
+  }
+
+  var assignments = [];
+  for(var r=1; r<rows.length; r++){
+    var row = rows[r];
+    var cls = row[0]&&row[0].trim();
+    if(!cls) continue;
+
+    // Split subjects for this date — "Physics, Chemistry, Biology"
+    var subjRaw = (sCo>0&&row[sCo]) ? row[sCo].trim() : "";
+    var subjects = subjRaw
+      ? subjRaw.split(",").map(function(s){return s.trim();}).filter(Boolean)
+      : [];
+
+    // Check every teacher col for this date
+    for(var c in tCols){
+      var cellVal = row[c] ? row[c].trim() : "";
+      if(!cellVal) continue;
+
+      // Split teachers in this cell — "MR NITIN SHARMA, MR. GAMBHIR SINGH, MRS. SHALINI BINDRA"
+      var teachersInCell = cellVal.split(",").map(function(t){return t.trim();});
+
+      // Find position of this teacher in the list (0-based)
+      var pos = -1;
+      for(var ti=0; ti<teachersInCell.length; ti++){
+        if(teachersInCell[ti].toUpperCase()===teacher.toUpperCase()){ pos=ti; break; }
+      }
+      if(pos===-1) continue;
+
+      // Pick the subject at the same position
+      // If subjects list has matching index → use it; else use full subjRaw or "—"
+      var mySubj = (subjects.length > pos) ? subjects[pos]
+                 : (subjects.length === 1)  ? subjects[0]
+                 : (subjRaw || "—");
+
+      assignments.push({ cls:cls, subj:mySubj, sysTotal:tpGetSysTotal(cls, mySubj, date) });
+    }
+  }
+
+  if(!assignments.length){
+    tpWrap.innerHTML = '<div class="tp-empty"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><p>No classes assigned to <strong style="color:var(--gold)">'+teacher+'</strong> on <strong style="color:var(--gold)">'+date+'</strong></p></div>';
+    tpSubmitRow.style.display = "none";
+    return;
+  }
+
+  // Find latest timestamp for last-saved display
+  var latestTs = "";
+  assignments.forEach(function(a){
+    var ex = existingMap[a.cls+"||"+a.subj];
+    if(ex&&ex.ts) latestTs = ex.ts;
+  });
+  if(latestTs) tpLastSaved.innerHTML = 'Last saved: <strong>'+latestTs+'</strong>';
+  else tpLastSaved.innerHTML = '';
+
+  var html = '<div class="tp-grid-wrap">'
+    + '<div class="tp-grid-header">'
+    + '<span style="color:var(--gold)">Class / Section</span>'
+    + '<span style="color:var(--gold)">Subject</span>'
+    + '<span style="color:var(--text3)">System<br>Total</span>'
+    + '<span style="color:#3b82f6">Scripts<br>Received</span>'
+    + '<span style="color:#2dd4bf">Scripts<br>Checked</span>'
+    + '<span style="color:#a78bfa">ERP<br>Uploaded</span>'
+    + '</div>';
+
+  assignments.forEach(function(a){
+    var key = a.cls+"||"+a.subj;
+    var ex  = existingMap[key]||{received:"",checked:"",erp:""};
+    html += '<div class="tp-grid-row">'
+          + '<div><div class="tp-cls-name">'+a.cls+'</div></div>'
+          + '<div style="font-size:.82rem;color:var(--ivory);font-weight:500">'+a.subj+'</div>'
+          + '<div class="tp-sys-total"><small>Auto</small>'+a.sysTotal+'</div>'
+          + '<div class="tp-n recv"><input type="number" class="tp-recv" min="0" placeholder="0" value="'+ex.received+'" data-cls="'+a.cls+'" data-subj="'+a.subj+'" data-sys="'+a.sysTotal+'"></div>'
+          + '<div class="tp-n chk"><input type="number" class="tp-chk" min="0" placeholder="0" value="'+ex.checked+'"></div>'
+          + '<div class="tp-n erp"><input type="number" class="tp-erp" min="0" placeholder="0" value="'+ex.erp+'"></div>'
+          + '</div>';
+  });
+  html += '</div>';
+
+  tpWrap.innerHTML = html;
+  tpSubmitRow.style.display = "flex";
+
+  // Reset submit button style
+  tpSubmitBtn.disabled = false;
+  tpSubmitBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22 11 13 2 9l20-7z"/></svg> Save Progress';
+  tpSubmitBtn.style.background = "";
+}
+
+/* ── Load button ── */
+tpLoadBtn.addEventListener("click", function(){
+  if(!currentTeacher){ tpToast("warning","Not logged in","Please select your name first."); showLogin(); return; }
+  var date = tpDate.value;
+  if(!date){ tpToast("warning","Select Date","Choose an exam date first."); return; }
+  tpLoadBtn.disabled = true;
+  tpLoadBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg> Loading...';
+  tpLoadSheets().then(function(){
+    tpPopulateDates();
+    tpDate.value = date; /* restore selected date after dropdown rebuild */
+    return tpLoadExisting(currentTeacher, date);
+  }).then(function(existing){
+    tpBuildGrid(currentTeacher, date, existing);
+    tpLoadBtn.disabled = false;
+    tpLoadBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Load My Classes';
+  }).catch(function(e){
+    tpToast("error","Load failed",e.message);
+    tpLoadBtn.disabled = false;
+    tpLoadBtn.innerHTML = 'Load My Classes';
+  });
+});
+
+/* ── Save Progress button ── */
+tpSubmitBtn.addEventListener("click", function(){
+  if(!currentTeacher){ alert("Please select your teacher name first."); return; }
+  if(!tpDate.value){ alert("Please select an exam date first."); return; }
+  var recvInputs = tpWrap.querySelectorAll(".tp-recv");
+  var chkInputs  = tpWrap.querySelectorAll(".tp-chk");
+  var erpInputs  = tpWrap.querySelectorAll(".tp-erp");
+  if(!recvInputs.length){ alert("Load your classes first."); return; }
+  var ts   = new Date().toLocaleString("en-IN",{timeZone:"Asia/Kolkata"});
+  var rows = [];
+  for(var i=0; i<recvInputs.length; i++){
+    var cls  = recvInputs[i].getAttribute("data-cls");
+    var subj = recvInputs[i].getAttribute("data-subj");
+    var sys  = recvInputs[i].getAttribute("data-sys");
+    var recv = recvInputs[i].value||"0";
+    var chk  = chkInputs[i]?chkInputs[i].value||"0":"0";
+    var erp  = erpInputs[i]?erpInputs[i].value||"0":"0";
+    rows.push([currentTeacher, tpDate.value, cls, subj, sys, recv, chk, erp, ts]);
+  }
+
+  tpSubmitBtn.disabled = true;
+  tpSubmitBtn.textContent = "Sending...";
+
+  var payload = JSON.stringify({
+    sheetName: TEACHER_SHEET,
+    values: rows,
+    mode: "upsert",
+    keyColumns: [0,1,2,3]
+  });
+
+  /* Use an image trick to ping — confirms network reaches Apps Script */
+  fetch(_APS, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {"Content-Type": "text/plain"},
+    body: payload
+  })
+  .then(function(){
+    /* fetch with no-cors always resolves — now verify by reading sheet */
+    tpSubmitBtn.textContent = "Verifying...";
+    return new Promise(function(res){ setTimeout(res, 3000); });
+  })
+  .then(function(){
+    return fetch(
+      "https://sheets.googleapis.com/v4/spreadsheets/"+_WBB+"/values/teacher_progress!A:I?key="+_API
+    ).then(function(r){ return r.json(); });
+  })
+  .then(function(d){
+    var sheetRows = d.values || [];
+    var verified = 0;
+    rows.forEach(function(r){
+      for(var i=1; i<sheetRows.length; i++){
+        var sr = sheetRows[i];
+        if(String(sr[0]).trim()===String(r[0]).trim() &&
+           String(sr[1]).trim()===String(r[1]).trim() &&
+           String(sr[2]).trim()===String(r[2]).trim() &&
+           String(sr[3]).trim()===String(r[3]).trim()){
+          verified++; break;
+        }
+      }
+    });
+
+    if(verified === rows.length){
+      tpSubmitBtn.textContent = "✓ Saved & Verified";
+      tpSubmitBtn.style.background = "var(--green)";
+      tpLastSaved.innerHTML = 'Last saved: <strong>'+ts+'</strong>';
+      var summary = rows.map(function(r){
+        return r[2]+' ('+r[3]+'): Recv='+r[5]+' Chk='+r[6]+' ERP='+r[7];
+      }).join('\n');
+      alert("✓ SAVED SUCCESSFULLY\n\n"+summary);
+    } else {
+      tpSubmitBtn.disabled = false;
+      tpSubmitBtn.textContent = "⚠ Not Written — Retry";
+      tpSubmitBtn.style.background = "#b45309";
+      /* Show exactly what the sheet returned for diagnosis */
+      var sheetSample = sheetRows.slice(0,5).map(function(r){return r.join(' | ');}).join('\n');
+      alert("⚠ NOT WRITTEN TO SHEET\n\nVerified: "+verified+"/"+rows.length+"\n\nSheet currently has "+sheetRows.length+" rows.\nFirst rows:\n"+sheetSample+"\n\nSent teacher: ["+rows[0][0]+"]\nSent date: ["+rows[0][1]+"]\n\nCheck:\n1. Apps Script re-deployed with new version?\n2. Sheet name in Workbook B is exactly: teacher_progress");
+    }
+  })
+  .catch(function(err){
+    tpSubmitBtn.disabled = false;
+    tpSubmitBtn.textContent = "⚠ Error — Retry";
+    tpSubmitBtn.style.background = "#b45309";
+    alert("ERROR: "+err.message+"\n\nThis is likely a network issue or the Sheets API key is blocked.");
+  });
+});
+
+/* ── tpTogglePanel — called from header click ── */
+window.tpTogglePanel = function(){
+  var body    = document.getElementById("tpPanelBody");
+  var chevron = document.getElementById("tpChevron");
+  var subtitle= document.getElementById("tpPanelSubtitle");
+  var isOpen  = body.style.display !== "none";
+  if(isOpen){
+    body.style.display = "none";
+    chevron.style.transform = "";
+    subtitle.textContent = "Click to open — Teachers update checked & ERP counts here";
+  } else {
+    body.style.display = "block";
+    chevron.style.transform = "rotate(180deg)";
+    subtitle.textContent = "Select exam date and load your classes";
+    // If not logged in, show login overlay now (user intentionally opened panel)
+    if(!currentTeacher){
+      // Load sheets first so teacher list is ready
+      tpLoadSheets().then(function(){
+        tpPopulateDates();
+        tpPopulateLoginSelect();
+        // Check localStorage
+        var saved = "";
+        try{ saved = localStorage.getItem(LS_KEY)||""; }catch(e){}
+        if(saved){
+          for(var i=0; i<loginSelect.options.length; i++){
+            if(loginSelect.options[i].value===saved){
+              loginSelect.value = saved;
+              loginBtn.disabled = false;
+              setTeacher(saved);
+              return;
+            }
+          }
+        }
+        showLogin();
+      }).catch(function(){ showLogin(); });
+    } else {
+      // Already logged in — just make sure dates are populated
+      tpLoadSheets().then(function(){ tpPopulateDates(); }).catch(function(){});
+    }
+  }
+};
+
+/* ── tpDoSwitch — called from Switch button ── */
+window.tpDoSwitch = function(){
+  var tpWrap2 = document.getElementById("tpClassesWrap");
+  var tpSubmitRow2 = document.getElementById("tpSubmitRow");
+  var tpDate2 = document.getElementById("tpDate");
+  tpWrap2.innerHTML = '<div class="tp-empty"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><p>Select an exam date above, then click <strong style="color:var(--gold)">Load My Classes</strong></p></div>';
+  tpSubmitRow2.style.display = "none";
+  tpDate2.value = "";
+  currentTeacher = "";
+  try{ localStorage.removeItem(LS_KEY); }catch(e){}
+  tpLoadSheets().then(function(){
+    tpPopulateLoginSelect();
+    showLogin();
+  }).catch(function(){ showLogin(); });
+};
+
+/* ── NO auto-init on page load — panel is closed by default ── */
+
+}());
+
+</script></body>
 </html>
