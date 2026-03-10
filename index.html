@@ -539,7 +539,7 @@ function loadRooms(){return fetchSheet("Sheet1!A2:A").then(function(data){roomDD
 function loadDates(){return fetchSheet("Sheet2!B1:Z1").then(function(data){dateDD.innerHTML="";var row=(data.values&&data.values[0])||[];row.forEach(function(d){if(d&&d.trim()){var o=document.createElement("option");o.value=d.trim();o.textContent=d.trim();dateDD.appendChild(o);}});}).catch(function(e){toast("error","Dates failed",e.message);});}
 function checkSubmitted(room,date){var opts=Array.prototype.slice.call(dateDD.options).map(function(o){return o.value;});var idx=opts.indexOf(date);if(idx===-1)return Promise.resolve(false);var sn="p"+(idx+1);return fetch("https://sheets.googleapis.com/v4/spreadsheets/"+SUBMIT_SHEET_ID+"/values/"+sn+"!A:F?key="+API_KEY).then(function(r){return r.json();}).then(function(d){if(d.values&&d.values.length>1){for(var i=1;i<d.values.length;i++){var row=d.values[i];if(row[4]===room&&row[5]===date)return true;}}return false;}).catch(function(){return false;});}
 function loadPrev(room,date){var opts=Array.prototype.slice.call(dateDD.options).map(function(o){return o.value;});var idx=opts.indexOf(date);if(idx===-1)return Promise.resolve(false);var sn="p"+(idx+1);return fetch("https://sheets.googleapis.com/v4/spreadsheets/"+SUBMIT_SHEET_ID+"/values/"+sn+"!A:F?key="+API_KEY).then(function(r){return r.json();}).then(function(d){if(d.values&&d.values.length>1){var prev=[];for(var i=1;i<d.values.length;i++){var row=d.values[i];if(row[4]===room&&row[5]===date){if(row[0]==="ALL_PRESENT")continue;prev.push({roll:row[0],name:row[1],className:row[2],subject:row[3],room:room,date:date});}}if(prev.length>0){absList=prev;locked=true;doLock(true);renderAtt(true);renderSum();return true;}}return false;}).catch(function(){return false;});}
-function doLock(on){locked=on;if(on){lockTxt.innerText="Locked";lockPill.className="st-pill locked";subBtn.disabled=true;resetBtn.disabled=true;var cells=document.querySelectorAll("#seatingPlan td.present,#seatingPlan td.absent");for(var i=0;i<cells.length;i++){cells[i].style.cursor="not-allowed";var nc=cells[i].cloneNode(true);cells[i].parentNode.replaceChild(nc,cells[i]);}}else{lockTxt.innerText="Editable";lockPill.className="st-pill open";subBtn.disabled=false;resetBtn.disabled=false;}}
+function doLock(on){locked=on;if(on){lockTxt.innerText="Locked";lockPill.className="st-pill locked";subBtn.disabled=true;subBtn.textContent="✓ Submitted";subBtn.style.background="var(--green)";subBtn.style.borderColor="var(--green)";resetBtn.disabled=true;var cells=document.querySelectorAll("#seatingPlan td.present,#seatingPlan td.absent");for(var i=0;i<cells.length;i++){cells[i].style.cursor="not-allowed";var nc=cells[i].cloneNode(true);cells[i].parentNode.replaceChild(nc,cells[i]);}}else{lockTxt.innerText="Editable";lockPill.className="st-pill open";subBtn.disabled=false;subBtn.textContent="Submit";subBtn.style.background="";subBtn.style.borderColor="";}}
 function getSubjMap(date){if(!sh2||!sh2.values)return{};var hdr=sh2.values[0],di=-1;for(var i=0;i<hdr.length;i++){if(hdr[i]&&hdr[i].trim()===date){di=i;break;}}if(di===-1)return{};var m={};for(var r=1;r<sh2.values.length;r++){var row=sh2.values[r];var cls=row[0]&&row[0].trim();if(cls&&row[di])m[cls]=row[di].trim();}return m;}
 function getSh4(date){if(!sh4||!sh4.values)return{};var hdr=sh4.values[0],di=-1;for(var i=0;i<hdr.length;i++){if(hdr[i]&&hdr[i].trim()===date){di=i;break;}}if(di===-1)return{};var m={};for(var r=1;r<sh4.values.length;r++){var row=sh4.values[r];var roll=row[0]&&row[0].toString().trim();var cls=row[5]&&row[5].toString().trim();if(roll&&cls)m[cls+"_"+roll]=(row[di]&&row[di].toString().trim())||"";}return m;}
 function parseBlocks(planRow){var blocks=[];for(var i=2;i<planRow.length;i+=3){if(i+2<planRow.length){var cn=planRow[i],sr=planRow[i+1],er=planRow[i+2];if(cn&&sr&&er){cn=cn.toString().trim();var s=parseInt(sr.toString().trim(),10),e=parseInt(er.toString().trim(),10);if(!isNaN(s)&&!isNaN(e)&&cn!=="")blocks.push({className:cn,startRoll:s,endRoll:e,currentRoll:s,totalStudents:e-s+1});}}}return blocks;}
@@ -563,9 +563,29 @@ function closeModal(){overlay.classList.remove("show");confirmBtn.removeEventLis
 function onCancel(){closeModal();}
 function onConfirm(){
   closeModal();
-  var vals=absList.length>0?absList.map(function(it){return[it.roll.toString(),it.name||"",it.className||"",it.subject||"",curRoom,date];}):[ ["ALL_PRESENT","ALL_PRESENT","ALL_PRESENT","ALL_PRESENT",curRoom,date] ];
+  // Build submission rows:
+  // 1. All absent students (as before)
+  // 2. For every class in this room that has ZERO absences → add an ALL_PRESENT row for that class
+  //    This ensures every class gets recorded even when only some classes have absentees
+  var absentRows = absList.map(function(it){
+      return [it.roll.toString(), it.name||"", it.className||"", it.subject||"", curRoom, date];
+  });
+  // Find which classes in this room had at least one absent student
+  var classesWithAbsent = {};
+  absList.forEach(function(it){ classesWithAbsent[it.className] = true; });
+  // For classes with NO absent student, add an ALL_PRESENT marker row
+  var allPresentRows = [];
+  curBlocks.forEach(function(b){
+      if(b.totalStudents > 0 && !classesWithAbsent[b.className]){
+          allPresentRows.push(["ALL_PRESENT", "ALL_PRESENT", b.className, "ALL_PRESENT", curRoom, date]);
+      }
+  });
+  var vals = absentRows.concat(allPresentRows);
+  // If room has no classes at all (shouldn't happen), fallback
+  if(vals.length === 0) vals = [["ALL_PRESENT","ALL_PRESENT","ALL_PRESENT","ALL_PRESENT",curRoom,date]];
   var orig=subBtn.innerHTML;subBtn.disabled=true;subBtn.textContent="Submitting...";
   fetch(APPS_SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify({sheetName:sn,values:vals})}).then(function(){doLock(true);renderAtt(true);
+  subBtn.textContent="✓ Submitted";subBtn.style.background="var(--green)";subBtn.style.borderColor="var(--green)";
   toast("success","Submitted Successfully!","Room "+curRoom+" attendance locked.",5000);}).catch(function(e){toast("error","Failed",e.message);subBtn.innerHTML=orig;subBtn.disabled=false;});
 }
 confirmBtn.addEventListener("click",onConfirm);
