@@ -846,13 +846,23 @@
                 </div>
                 <div>
                     <div class="tp-login-title">Teacher Login</div>
-                    <div class="tp-login-sub">Select your name to access your script tracking panel</div>
+                    <div class="tp-login-sub">Search and select your name to access your script tracking panel</div>
                 </div>
             </div>
             <div class="tp-login-body">
                 <div class="tp-login-field">
                     <label>Your Name</label>
-                    <select id="tpLoginSelect">
+                    <div style="position: relative;">
+                        <input type="text" 
+                               id="tpLoginSearch" 
+                               placeholder="Type to search teacher name..." 
+                               autocomplete="off"
+                               style="width:100%; padding:11px 14px; border:1px solid rgba(201,168,76,.3); border-radius:8px; font-size:.9rem; font-weight:500; font-family:var(--font); color:var(--ivory); background:var(--ink2); outline:none; transition:border-color .2s, box-shadow .2s; margin-bottom:5px;">
+                        <div id="tpSearchResults" 
+                             style="position:absolute; top:100%; left:0; right:0; max-height:250px; overflow-y:auto; background:var(--ink3); border:1px solid var(--border); border-radius:8px; z-index:1000; display:none; box-shadow:0 10px 30px rgba(0,0,0,.5);">
+                        </div>
+                    </div>
+                    <select id="tpLoginSelect" style="display:none;">
                         <option value="">— Loading teachers... —</option>
                     </select>
                 </div>
@@ -981,8 +991,7 @@ function onConfirm(){
   var orig=subBtn.innerHTML;subBtn.disabled=true;subBtn.textContent="Submitting...";
   fetch(APPS_SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify({sheetName:sn,values:vals})}).then(function(){doLock(true);renderAtt(true);
   subBtn.textContent="✓ Submitted";subBtn.style.background="var(--green)";subBtn.style.borderColor="var(--green)";
-  toast("success","Submitted Successfully!","Room "+curRoom+" attendance locked.",5000);}).catch(function(e){toast("error","Failed",e.message);subBtn.innerHTML=orig;subBtn.disabled=false;});
-}
+  toast("success","Submitted Successfully!","Room "+curRoom+" attendance locked.",5000);}).catch(function(e){toast("error","Failed",e.message);subBtn.innerHTML=orig;subBtn.disabled=false;});}
 confirmBtn.addEventListener("click",onConfirm);
 cancelBtn.addEventListener("click",onCancel);
 /* Close on backdrop click */
@@ -998,7 +1007,7 @@ window.addEventListener("load",function(){loadRooms().then(loadDates).then(cache
 }());
 
 /* ══════════════════════════════════════════
-   TEACHER PANEL JS
+   TEACHER PANEL JS - with Searchable Dropdown
 ══════════════════════════════════════════ */
 (function(){
 "use strict";
@@ -1008,6 +1017,8 @@ var LS_KEY        = "bvm_teacher_name";
 
 /* DOM refs */
 var loginOverlay  = document.getElementById("tpLoginOverlay");
+var loginSearch   = document.getElementById("tpLoginSearch");
+var searchResults = document.getElementById("tpSearchResults");
 var loginSelect   = document.getElementById("tpLoginSelect");
 var loginBtn      = document.getElementById("tpLoginBtn");
 var tpPill        = document.getElementById("tpTeacherPill");
@@ -1028,6 +1039,7 @@ var _APS = "https://script.google.com/macros/s/AKfycbwrGctMFWczVm3sgRY-T07OuAR9a
 
 var currentTeacher = "";
 var sheet6Raw = null, sheet4Raw = null, sheet2Raw = null, sheet3Raw = null;
+var teacherList = []; // Store all teacher names for search
 
 /* ── helpers ── */
 function tpFetch(url){ return fetch(url).then(function(r){return r.json();}); }
@@ -1079,11 +1091,13 @@ function tpPopulateDates(){
   }
 }
 
-/* ── populate login select (all unique teachers from Sheet6 cols 11+) ── */
-function tpPopulateLoginSelect(){
+/* ── populate teacher list for search (all unique teachers from Sheet6 cols 11+) ── */
+function tpPopulateTeacherList(){
   if(!sheet6Raw||!sheet6Raw.values) return;
   var rows = sheet6Raw.values, hdr = rows[0]||[];
   var seen = {};
+  teacherList = [];
+  
   for(var r=1; r<rows.length; r++){
     var row = rows[r];
     for(var c=11; c<hdr.length; c++){
@@ -1092,26 +1106,102 @@ function tpPopulateLoginSelect(){
       // Split comma-separated teacher names in one cell
       cellVal.split(",").forEach(function(t){
         var name = t.trim();
-        if(name) seen[name] = true;
+        if(name && !seen[name]) {
+          seen[name] = true;
+          teacherList.push(name);
+        }
       });
     }
   }
+  
+  teacherList.sort();
+  
+  // Also populate hidden select for backward compatibility
   loginSelect.innerHTML = '<option value="">— Select your name —</option>';
-  Object.keys(seen).sort().forEach(function(t){
+  teacherList.forEach(function(t){
     var o = document.createElement("option");
     o.value = t; o.textContent = t;
     loginSelect.appendChild(o);
   });
   loginSelect.disabled = false;
+  
+  // Clear search field
+  if(loginSearch) loginSearch.value = "";
+  hideSearchResults();
 }
+
+/* ── Search functionality ── */
+function filterTeachers(searchTerm) {
+  if(!searchTerm || searchTerm.trim() === "") {
+    return teacherList;
+  }
+  var term = searchTerm.toLowerCase().trim();
+  return teacherList.filter(function(name) {
+    return name.toLowerCase().includes(term);
+  });
+}
+
+function showSearchResults() {
+  if(searchResults) {
+    searchResults.style.display = "block";
+  }
+}
+
+function hideSearchResults() {
+  if(searchResults) {
+    searchResults.style.display = "none";
+  }
+}
+
+function renderSearchResults(filteredList) {
+  if(!searchResults) return;
+  
+  if(!filteredList || filteredList.length === 0) {
+    searchResults.innerHTML = '<div style="padding:12px; text-align:center; color:var(--text3);">No matching teachers found</div>';
+    showSearchResults();
+    return;
+  }
+  
+  var html = '';
+  filteredList.forEach(function(name) {
+    html += '<div class="search-result-item" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid var(--border2); transition:background .15s; color:var(--ivory);" onclick="selectTeacherFromSearch(\'' + name.replace(/'/g, "\\'") + '\')" onmouseover="this.style.background=\'rgba(201,168,76,.1)\'" onmouseout="this.style.background=\'transparent\'">' + name + '</div>';
+  });
+  
+  searchResults.innerHTML = html;
+  showSearchResults();
+}
+
+// Make function globally available for onclick handler
+window.selectTeacherFromSearch = function(name) {
+  if(loginSearch) {
+    loginSearch.value = name;
+    // Also set the hidden select value
+    for(var i=0; i<loginSelect.options.length; i++) {
+      if(loginSelect.options[i].value === name) {
+        loginSelect.selectedIndex = i;
+        break;
+      }
+    }
+    loginBtn.disabled = false;
+    hideSearchResults();
+  }
+};
 
 /* ── login flow ── */
 function showLogin(){
   loginOverlay.classList.add("show");
+  // Focus on search field
+  setTimeout(function() {
+    if(loginSearch) {
+      loginSearch.focus();
+    }
+  }, 300);
 }
+
 function hideLogin(){
   loginOverlay.classList.remove("show");
 }
+
 function setTeacher(name){
   currentTeacher = name;
   try{ localStorage.setItem(LS_KEY, name); }catch(e){}
@@ -1122,13 +1212,67 @@ function setTeacher(name){
   tpToast("success", "Welcome, "+name.split(" ")[0]+"!", "Select an exam date and load your classes.");
 }
 
-loginSelect.addEventListener("change", function(){
-  loginBtn.disabled = !loginSelect.value;
-});
+// Search input handler
+if(loginSearch) {
+  loginSearch.addEventListener("input", function(e) {
+    var searchTerm = e.target.value;
+    var filtered = filterTeachers(searchTerm);
+    renderSearchResults(filtered);
+    
+    // Disable login button if no exact match
+    var exactMatch = filtered.length === 1 && filtered[0].toLowerCase() === searchTerm.toLowerCase().trim();
+    loginBtn.disabled = !exactMatch;
+    
+    // If no results or empty search, show all teachers when search is cleared
+    if(searchTerm.trim() === "") {
+      renderSearchResults(teacherList);
+      loginBtn.disabled = true;
+    }
+  });
+  
+  loginSearch.addEventListener("focus", function() {
+    if(teacherList.length > 0) {
+      renderSearchResults(teacherList);
+    }
+  });
+  
+  // Close search results when clicking outside
+  document.addEventListener("click", function(e) {
+    if(loginSearch && searchResults && 
+       !loginSearch.contains(e.target) && 
+       !searchResults.contains(e.target)) {
+      hideSearchResults();
+    }
+  });
+  
+  // Handle keyboard navigation
+  loginSearch.addEventListener("keydown", function(e) {
+    if(e.key === "Escape") {
+      hideSearchResults();
+    } else if(e.key === "Enter") {
+      var filtered = filterTeachers(loginSearch.value);
+      if(filtered.length === 1) {
+        selectTeacherFromSearch(filtered[0]);
+        e.preventDefault();
+      }
+    }
+  });
+}
+
 loginBtn.addEventListener("click", function(){
-  if(loginSelect.value) setTeacher(loginSelect.value);
+  if(loginSearch && loginSearch.value) {
+    var filtered = filterTeachers(loginSearch.value);
+    if(filtered.length === 1) {
+      setTeacher(filtered[0]);
+    } else if(filtered.length > 1) {
+      tpToast("warning", "Multiple matches", "Please select a specific name from the list.");
+    } else {
+      tpToast("error", "No match", "Teacher name not found.");
+    }
+  }
 });
-/* Switch handled by tpDoSwitch() */
+
+/* ── Switch handled by tpDoSwitch() ── */
 
 /* ── system total from Sheet4 / Sheet3 ── */
 function tpGetSysTotal(className, subject, date){
@@ -1408,18 +1552,17 @@ window.tpTogglePanel = function(){
       // Load sheets first so teacher list is ready
       tpLoadSheets().then(function(){
         tpPopulateDates();
-        tpPopulateLoginSelect();
+        tpPopulateTeacherList(); // This now populates search list
         // Check localStorage
         var saved = "";
         try{ saved = localStorage.getItem(LS_KEY)||""; }catch(e){}
         if(saved){
-          for(var i=0; i<loginSelect.options.length; i++){
-            if(loginSelect.options[i].value===saved){
-              loginSelect.value = saved;
-              loginBtn.disabled = false;
-              setTeacher(saved);
-              return;
-            }
+          // Check if saved teacher exists in list
+          if(teacherList.includes(saved)) {
+            loginSearch.value = saved;
+            loginBtn.disabled = false;
+            setTeacher(saved);
+            return;
           }
         }
         showLogin();
@@ -1442,7 +1585,7 @@ window.tpDoSwitch = function(){
   currentTeacher = "";
   try{ localStorage.removeItem(LS_KEY); }catch(e){}
   tpLoadSheets().then(function(){
-    tpPopulateLoginSelect();
+    tpPopulateTeacherList(); // This now populates search list
     showLogin();
   }).catch(function(){ showLogin(); });
 };
