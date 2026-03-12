@@ -1,0 +1,3328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAL VIDYA MANDIR - Examination Attendance System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <style>
+        /* ══════════════════════════════════════════════════════════════
+           BAL VIDYA MANDIR — Premium Dark Editorial UI
+           Palette: Deep Charcoal · Warm Ivory · Gold · Crimson Accent
+        ══════════════════════════════════════════════════════════════ */
+        :root {
+            --ink:       #12100e;
+            --ink2:      #1c1917;
+            --ink3:      #292524;
+            --ink4:      #44403c;
+            --gold:      #c9a84c;
+            --gold2:     #e8c96e;
+            --gold-lt:   #fdf6e3;
+            --gold-glow: rgba(201,168,76,.18);
+            --ivory:     #faf7f2;
+            --ivory2:    #f2ede4;
+            --cream:     #e8e0d0;
+            --green:     #2d6a4f;
+            --green-lt:  #d8f3dc;
+            --red:       #9b2226;
+            --red-lt:    #ffe8e8;
+            --blue:      #1d4e89;
+            --blue-lt:   #dbeafe;
+            --teal:      #0f766e;
+            --amber:     #b45309;
+            --violet:    #5b21b6;
+            --border:    rgba(201,168,76,.2);
+            --border2:   rgba(201,168,76,.08);
+            --text:      #1c1917;
+            --text2:     #57534e;
+            --text3:     #a8a29e;
+            --font:      'Outfit', system-ui, sans-serif;
+            --font-d:    'Cormorant Garamond', Georgia, serif;
+            --r:         10px;
+            --sh:        0 1px 3px rgba(0,0,0,.08), 0 6px 20px rgba(0,0,0,.06);
+            --sh2:       0 8px 24px rgba(0,0,0,.14), 0 20px 48px rgba(0,0,0,.10);
+            --gsh:       0 0 0 1px var(--border), 0 4px 20px var(--gold-glow);
+        }
+
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font);
+            background: var(--ivory);
+            min-height: 100vh;
+            color: var(--text);
+            position: relative;
+        }
+
+        /* Subtle grain texture overlay */
+        body::before {
+            content: '';
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            opacity: .4;
+        }
+
+        /* ══════════════════════════════════
+           HEADER — Dramatic full-width crest
+        ══════════════════════════════════ */
+        .school-header {
+            background: var(--ink2);
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Decorative diagonal lines pattern */
+        .school-header::before {
+            content: '';
+            position: absolute; inset: 0; pointer-events: none;
+            background-image:
+                repeating-linear-gradient(
+                    -45deg,
+                    transparent,
+                    transparent 40px,
+                    rgba(201,168,76,.03) 40px,
+                    rgba(201,168,76,.03) 41px
+                );
+        }
+
+        /* Gold glow orb left */
+        .school-header::after {
+            content: '';
+            position: absolute;
+            left: -80px; top: -80px;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(201,168,76,.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .header-inner {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 28px;
+            position: relative;
+            z-index: 1;
+            min-height: 90px;
+        }
+
+        .header-logo {
+            width: 66px; height: 66px;
+            background: var(--gold-lt);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            font-family: var(--font-d);
+            font-size: .95rem; color: var(--ink2);
+            font-weight: 700;
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 0 4px var(--gold-glow), 0 4px 20px rgba(0,0,0,.3);
+            overflow: hidden;
+            transition: transform .3s, box-shadow .3s;
+        }
+        .header-logo:hover {
+            transform: scale(1.06);
+            box-shadow: 0 0 0 6px var(--gold-glow), 0 6px 28px rgba(0,0,0,.4);
+        }
+        .header-logo img { width:90%; height:90%; object-fit:contain; }
+
+        .header-text { }
+        .header-school-name {
+            font-family: var(--font-d);
+            font-size: 1.75rem; font-weight: 600;
+            color: var(--gold2);
+            line-height: 1.1;
+            letter-spacing: .5px;
+            text-shadow: 0 2px 12px rgba(201,168,76,.25);
+        }
+        .header-tagline {
+            font-size: .65rem; font-weight: 500;
+            color: rgba(255,255,255,.35);
+            letter-spacing: 3px; text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        /* Right side — exam name + current view pill */
+        .header-right {
+            display: flex; flex-direction: column;
+            align-items: flex-end; gap: 8px;
+        }
+        #examName {
+            font-family: var(--font-d);
+            font-size: 1rem; font-weight: 500;
+            color: rgba(255,255,255,.65);
+            letter-spacing: .3px;
+            text-align: right;
+        }
+        .header-badge {
+            background: var(--gold);
+            color: var(--ink2);
+            border-radius: 4px;
+            padding: 4px 14px;
+            font-size: .6rem; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(201,168,76,.4);
+            transition: background .2s;
+        }
+
+        /* Gold divider line under header */
+        .header-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, var(--gold) 30%, var(--gold2) 50%, var(--gold) 70%, transparent 100%);
+        }
+
+        /* ══════════════════════════════════
+           CONTAINER
+        ══════════════════════════════════ */
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 28px 40px 56px;
+            position: relative; z-index: 1;
+        }
+
+        /* ══════════════════════════════════
+           CONTROL TOOLBAR
+        ══════════════════════════════════ */
+        .control-panel {
+            background: var(--ink3);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 14px 20px;
+            margin-bottom: 24px;
+            box-shadow: var(--gsh);
+        }
+        .control-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .date-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex: 1;
+            min-width: 240px;
+        }
+        .date-selector label {
+            font-size: .6rem; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: var(--gold);
+            white-space: nowrap;
+        }
+        select {
+            padding: 9px 34px 9px 14px;
+            border: 1px solid rgba(201,168,76,.3);
+            border-radius: 7px;
+            font-size: .85rem; font-weight: 500;
+            font-family: var(--font);
+            color: var(--ivory);
+            background: var(--ink2);
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%23c9a84c' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            cursor: pointer;
+        }
+        select option { background: var(--ink2); color: var(--ivory); }
+        select:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px var(--gold-glow);
+        }
+        #examDate { flex: 1; min-width: 130px; }
+        #classGroup { min-width: 130px; }
+
+        /* ══ BUTTONS ══ */
+        .button-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        button {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 16px;
+            border: none; border-radius: 7px;
+            font-size: .75rem; font-weight: 600;
+            font-family: var(--font);
+            cursor: pointer;
+            transition: all .2s;
+            white-space: nowrap;
+            letter-spacing: .5px;
+            position: relative; overflow: hidden;
+        }
+        button::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: rgba(255,255,255,0);
+            transition: background .15s;
+        }
+        button:hover::after { background: rgba(255,255,255,.1); }
+        button:hover { transform: translateY(-2px); box-shadow: var(--sh2); }
+        button:active { transform: translateY(0); }
+
+        .check-btn      { background: var(--ink4);  color: var(--cream); border: 1px solid rgba(255,255,255,.1); }
+        .collection-btn { background: var(--green);  color: #fff; }
+        .issuance-btn   { background: var(--amber);  color: #fff; }
+        .report-btn     { background: var(--violet); color: #fff; }
+        .refresh-btn    { background: var(--teal);   color: #fff; }
+
+        .teacher-btn   { background: #1d4e89;  color: #fff; }
+        .print-btn      {
+            background: transparent;
+            color: var(--gold);
+            border: 1.5px solid var(--gold);
+            box-shadow: 0 0 0 0 var(--gold-glow);
+        }
+        .print-btn:hover {
+            background: var(--gold);
+            color: var(--ink2);
+            box-shadow: 0 0 0 4px var(--gold-glow), var(--sh2);
+        }
+        .export-btn {
+            background: var(--green); color: #fff;
+            margin-top: 14px; padding: 10px 22px;
+            font-size: .82rem;
+        }
+
+        /* ══════════════════════════════════
+           SUMMARY STAT CARDS
+        ══════════════════════════════════ */
+        .summary-stats {
+            display: flex; gap: 16px;
+            margin-bottom: 24px; flex-wrap: wrap;
+        }
+        .summary-box {
+            flex: 1; min-width: 160px;
+            background: var(--ink3);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 22px 18px;
+            text-align: center;
+            box-shadow: var(--gsh);
+            transition: transform .18s, box-shadow .18s;
+            cursor: default;
+        }
+        .summary-box:hover { transform: translateY(-3px); box-shadow: var(--sh2); }
+        .summary-box .stat-label {
+            font-size: .55rem; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: var(--text3); margin-bottom: 10px;
+        }
+        .summary-box .stat-value {
+            font-family: var(--font-d);
+            font-size: 3rem; line-height: 1;
+            font-weight: 700;
+        }
+        .summary-box.total   { border-top: 3px solid #3b82f6; }
+        .summary-box.total   .stat-value { color: #60a5fa; }
+        .summary-box.submitted { border-top: 3px solid var(--green); }
+        .summary-box.submitted .stat-value { color: #4ade80; }
+        .summary-box.missing { border-top: 3px solid var(--red); }
+        .summary-box.missing .stat-value { color: #f87171; }
+
+        /* ══════════════════════════════════
+           ERROR & LOADING
+        ══════════════════════════════════ */
+        .error {
+            background: rgba(155,34,38,.15);
+            color: #fca5a5;
+            padding: 14px 18px;
+            border-radius: var(--r);
+            margin-bottom: 20px;
+            border-left: 3px solid var(--red);
+            font-weight: 500; font-size: .88rem;
+        }
+        .loading {
+            text-align: center;
+            color: var(--gold);
+            padding: 60px 20px;
+            font-weight: 500;
+            font-size: .9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .loading::before {
+            content: '';
+            display: block;
+            width: 36px; height: 36px;
+            border: 2px solid rgba(201,168,76,.2);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            margin: 0 auto 18px;
+            animation: spin .8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ══════════════════════════════════
+           MISSING ROOMS GRID
+        ══════════════════════════════════ */
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 10px; padding: 24px;
+        }
+        .room-card {
+            padding: 14px 8px;
+            background: rgba(155,34,38,.12);
+            border: 1px solid rgba(155,34,38,.3);
+            border-left: 3px solid var(--red);
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700; font-size: .82rem;
+            color: #fca5a5;
+            transition: transform .12s, background .12s;
+        }
+        .room-card:hover { transform: scale(1.05); background: rgba(155,34,38,.2); }
+
+        /* ══════════════════════════════════
+           MAIN PRINT CONTAINER
+        ══════════════════════════════════ */
+        .print-container {
+            background: var(--ink2);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            overflow: hidden;
+            box-shadow: var(--gsh);
+        }
+
+        /* Print header inside container (visible on screen) */
+        .print-school-header {
+            padding: 20px 28px 16px;
+            text-align: center;
+            background: linear-gradient(180deg, var(--ink) 0%, var(--ink2) 100%);
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+        .print-school-header::after {
+            content: '';
+            position: absolute; bottom: 0; left: 10%; right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+        .print-school-name {
+            font-family: var(--font-d);
+            font-size: 1.5rem; font-weight: 600;
+            color: var(--gold2);
+            letter-spacing: .5px;
+        }
+        .print-exam-name {
+            font-size: .65rem; font-weight: 500;
+            color: rgba(255,255,255,.4);
+            letter-spacing: 3px; text-transform: uppercase;
+            margin-top: 6px;
+        }
+        .print-exam-date {
+            font-size: .75rem; font-weight: 600;
+            color: var(--gold2);
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        /* ══════════════════════════════════
+           SHEET WRAPPERS
+        ══════════════════════════════════ */
+        .collection-sheet,
+        .issuance-sheet,
+        .report-sheet {
+            background: var(--ink2);
+            padding: 0; margin: 0;
+            overflow-x: auto;
+        }
+        .report-sheet { display: none; }
+
+        /* Sheet sub-header */
+        .sheet-header {
+            background: transparent;
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            margin-bottom: 0;
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .sheet-header h2 {
+            font-family: var(--font-d);
+            color: var(--gold2);
+            font-size: 1.25rem; font-weight: 600;
+            text-decoration: none;
+            margin-bottom: 0;
+            letter-spacing: .8px;
+        }
+        .sheet-header .date-class {
+            display: flex; gap: 24px;
+            font-size: .68rem; font-weight: 600;
+            color: rgba(255,255,255,.4);
+            letter-spacing: 1.5px; text-transform: uppercase;
+        }
+        .sheet-header .date-class span { color: rgba(255,255,255,.75); }
+
+        /* ══════════════════════════════════
+           TABLES
+        ══════════════════════════════════ */
+        table { width: 100%; border-collapse: collapse; font-size: .84rem; }
+
+        th {
+            background: var(--ink) !important;
+            color: var(--gold) !important;
+            padding: 12px 14px;
+            text-align: center;
+            border: none;
+            border-right: 1px solid var(--border2);
+            border-bottom: 2px solid var(--border);
+            font-size: .6rem; font-weight: 700;
+            letter-spacing: 1.8px; text-transform: uppercase;
+        }
+        th:last-child { border-right: none; }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border2);
+            border-right: 1px solid var(--border2);
+            vertical-align: middle;
+            color: rgba(255,255,255,.7);
+            font-size: .83rem;
+            transition: background .1s;
+        }
+        td:last-child { border-right: none; }
+        tr:last-child td { border-bottom: none; }
+
+        tr:nth-child(even) td { background: rgba(255,255,255,.02); }
+
+        tr:hover td {
+            background: rgba(201,168,76,.06) !important;
+            color: var(--ivory) !important;
+        }
+
+        td[rowspan] {
+            background: rgba(201,168,76,.08) !important;
+            color: var(--gold2) !important;
+            font-weight: 700;
+            border-right: 2px solid rgba(201,168,76,.25) !important;
+            letter-spacing: .3px;
+        }
+
+        .total-row td {
+            background: rgba(45,106,79,.2) !important;
+            color: #4ade80 !important;
+            font-weight: 700;
+            border-top: 1px solid rgba(45,106,79,.4) !important;
+        }
+
+        .absentee-row td {
+            background: rgba(155,34,38,.12) !important;
+            color: #fca5a5 !important;
+        }
+        .absentee-row:hover td {
+            background: rgba(155,34,38,.22) !important;
+        }
+
+        /* Class separator rows */
+        tr[style*="height: 5px"] td {
+            background: rgba(201,168,76,.1) !important;
+            padding: 0 !important;
+            height: 3px !important;
+        }
+
+        /* ══════════════════════════════════
+           FOOTER
+        ══════════════════════════════════ */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid var(--border2);
+        }
+        .last-updated {
+            font-size: .68rem;
+            color: var(--text3);
+            font-weight: 400;
+            letter-spacing: .5px;
+        }
+
+        /* ══════════════════════════════════
+           ANIMATIONS
+        ══════════════════════════════════ */
+        @keyframes fadeUp {
+            from { opacity:0; transform: translateY(10px); }
+            to   { opacity:1; transform: translateY(0); }
+        }
+        .print-container, .summary-box, .control-panel {
+            animation: fadeUp .4s ease both;
+        }
+        .summary-box:nth-child(2) { animation-delay: .05s; }
+        .summary-box:nth-child(3) { animation-delay: .1s; }
+        
+        /* ══════════════════════════════════════════
+           PRINT STYLES — Full A4, zero wasted space
+        ══════════════════════════════════════════ */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0.6cm 0.7cm 0.6cm 0.7cm; /* tight but readable margins */
+            }
+
+            /* ── Reset everything to white, no padding ── */
+            * { box-sizing: border-box; }
+
+            html, body {
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                color-adjust: exact;
+                font-size: 9pt;
+            }
+
+            /* ── Hide ALL screen-only elements ── */
+            .school-header,
+            .control-panel,
+            .footer,
+            .summary-stats,
+            #error,
+            #summaryStats,
+            #missingRoomsList,
+            .loading,
+            .rooms-grid,
+            .room-card,
+            .export-btn,
+            button {
+                display: none !important;
+            }
+
+            /* ── Container: strip all chrome ── */
+            .container {
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+
+            /* ── Print container: no border, no padding, full width ── */
+            .print-container {
+                display: block !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                background: white !important;
+                width: 100% !important;
+            }
+
+            /* ── School header: compact, centred ── */
+            .print-school-header {
+                text-align: center;
+                margin-bottom: 6px;
+                padding: 8px 0 6px !important;
+                background: white !important;
+                border-bottom: 2px solid #000;
+            }
+            .print-school-header::after { display: none !important; }
+            .print-school-name {
+                font-size: 15pt;
+                font-weight: bold;
+                color: #000 !important;
+                line-height: 1.2;
+                background: none !important;
+                -webkit-text-fill-color: #000 !important;
+            }
+            .print-exam-name {
+                font-size: 11pt;
+                font-weight: 600;
+                color: #000 !important;
+                margin-top: 2px;
+                line-height: 1.2;
+                letter-spacing: normal !important;
+                opacity: 1 !important;
+            }
+            .print-exam-date {
+                font-size: 10pt;
+                font-weight: 700;
+                color: #000 !important;
+                margin-top: 3px;
+                letter-spacing: normal !important;
+                opacity: 1 !important;
+            }
+
+            /* ── Sheet wrappers: only show the ACTIVE sheet ── */
+            /* Default: hide all three */
+            .collection-sheet,
+            .issuance-sheet,
+            .report-sheet {
+                display: none !important;
+            }
+            /* Show only the one that is NOT display:none in the DOM
+               (the active sheet is set to display:block by JS) */
+            .collection-sheet[style*="display: block"],
+            .issuance-sheet[style*="display: block"],
+            .report-sheet[style*="display: block"] {
+                display: block !important;
+                border: none !important;
+                border-radius: 0 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                overflow: visible !important;
+                width: 100% !important;
+            }
+
+            /* ── Sheet header (date / class line) ── */
+            .sheet-header {
+                background: white !important;
+                border: none !important;
+                border-bottom: 1.5px solid #000 !important;
+                border-radius: 0 !important;
+                padding: 4px 0 5px 0 !important;
+                margin: 0 0 4px 0 !important;
+                text-align: center;
+            }
+            .sheet-header h2 {
+                font-size: 13pt !important;
+                color: #000 !important;
+                margin-bottom: 3px !important;
+                text-decoration: underline;
+            }
+            .sheet-header .date-class {
+                font-size: 9pt !important;
+                font-weight: 700;
+                color: #000 !important;
+            }
+
+            /* ── Table: stretch to full page width ── */
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                font-size: 8.5pt !important;
+                border: 1.5px solid #000 !important;
+                margin: 0 !important;
+                table-layout: fixed !important;
+                page-break-inside: auto;
+            }
+
+            thead { display: table-header-group; } /* repeat header on each page */
+            tr    { page-break-inside: avoid; }
+
+            th {
+                background: #e8e8e8 !important;
+                color: #000 !important;
+                padding: 5px 3px !important;
+                border: 1px solid #999 !important;
+                font-size: 8pt !important;
+                text-align: center;
+                line-height: 1.2;
+            }
+
+            td {
+                padding: 3px 4px !important;
+                border: 1px solid #aaa !important;
+                font-size: 8.5pt !important;
+                line-height: 1.25;
+                vertical-align: middle;
+                color: #000 !important;
+                background: white !important;
+            }
+
+            /* Zebra rows — very light */
+            tr:nth-child(even) td { background: #f5f5f5 !important; }
+
+            td[rowspan] {
+                background: #efefef !important;
+                font-weight: bold;
+                vertical-align: middle;
+                color: #000 !important;
+            }
+
+            .total-row td {
+                background: #dff0d8 !important;
+                font-weight: 700 !important;
+                border-top: 1.5px solid #666 !important;
+                color: #000 !important;
+            }
+
+            .absentee-row td { background: #fff3f3 !important; color: #000 !important; }
+
+            /* Separator rows between classes */
+            tr[style*="height: 5px"] td {
+                background: #ccc !important;
+                padding: 1px 0 !important;
+                height: 3px !important;
+            }
+
+            /* ── COLLECTION SHEET column widths (8 cols) ── */
+            .collection-sheet table th:nth-child(1),
+            .collection-sheet table td:nth-child(1) { width: 9%; }   /* CLASS */
+            .collection-sheet table th:nth-child(2),
+            .collection-sheet table td:nth-child(2) { width: 7%; }   /* ROOM */
+            .collection-sheet table th:nth-child(3),
+            .collection-sheet table td:nth-child(3) { width: 6%; }   /* FROM */
+            .collection-sheet table th:nth-child(4),
+            .collection-sheet table td:nth-child(4) { width: 6%; }   /* TO */
+            .collection-sheet table th:nth-child(5),
+            .collection-sheet table td:nth-child(5) { width: 10%; vertical-align: top !important; }  /* TOTAL */
+            .collection-sheet table th:nth-child(6),
+            .collection-sheet table td:nth-child(6) { width: 38%; }  /* ABSENTEES */
+            .collection-sheet table th:nth-child(7),
+            .collection-sheet table td:nth-child(7) { width: 8%; }   /* COPIES */
+            .collection-sheet table th:nth-child(8),
+            .collection-sheet table td:nth-child(8) { width: 16%; }  /* SIGN */
+
+            /* Roll division inside TOTAL cell (collection sheet) */
+            .collection-sheet table td:nth-child(5) div {
+                font-size: 6.5pt !important;
+                color: #333 !important;
+                margin-top: 2px;
+                font-weight: normal !important;
+                text-align: center;
+            }
+
+            /* SIGN sub-lines in collection sheet */
+            .collection-sheet table td:nth-child(8) div {
+                font-size: 6.5pt !important;
+                min-height: 16px !important;
+                color: #555 !important;
+                border-bottom: 0.5px solid #bbb !important;
+                padding: 1px 2px !important;
+            }
+            .collection-sheet table td:nth-child(8) div:last-child {
+                border-bottom: none !important;
+            }
+
+            /* ── ISSUANCE SHEET column widths (7 cols) ── */
+            .issuance-sheet table th:nth-child(1),
+            .issuance-sheet table td:nth-child(1) { width: 9%; }   /* CLASS */
+            .issuance-sheet table th:nth-child(2),
+            .issuance-sheet table td:nth-child(2) { width: 20%; }  /* SUBJECT */
+            .issuance-sheet table th:nth-child(3),
+            .issuance-sheet table td:nth-child(3) { width: 18%; vertical-align: top !important; }  /* TOTAL STUDENTS */
+            .issuance-sheet table th:nth-child(4),
+            .issuance-sheet table td:nth-child(4) { width: 18%; }  /* ABSENTEES */
+            .issuance-sheet table th:nth-child(5),
+            .issuance-sheet table td:nth-child(5) { width: 9%; }   /* COPIES */
+            .issuance-sheet table th:nth-child(6),
+            .issuance-sheet table td:nth-child(6) { width: 16%; }  /* TEACHER */
+            .issuance-sheet table th:nth-child(7),
+            .issuance-sheet table td:nth-child(7) { width: 10%; }  /* SIGN */
+            /* Roll list inside TOTAL STUDENTS cell */
+            .issuance-sheet table td:nth-child(3) div {
+                font-size: 6.5pt !important;
+                color: #333 !important;
+                margin-top: 2px;
+                line-height: 1.4;
+                font-weight: normal !important;
+                text-align: center;
+            }
+
+            /* ── REPORT SHEET column widths (6 cols) ── */
+            .report-sheet table th:nth-child(1),
+            .report-sheet table td:nth-child(1) { width: 9%; }   /* Roll No */
+            .report-sheet table th:nth-child(2),
+            .report-sheet table td:nth-child(2) { width: 28%; }  /* Name */
+            .report-sheet table th:nth-child(3),
+            .report-sheet table td:nth-child(3) { width: 11%; }  /* Class */
+            .report-sheet table th:nth-child(4),
+            .report-sheet table td:nth-child(4) { width: 20%; }  /* Subject */
+            .report-sheet table th:nth-child(5),
+            .report-sheet table td:nth-child(5) { width: 10%; }  /* Room */
+            .report-sheet table th:nth-child(6),
+            .report-sheet table td:nth-child(6) { width: 22%; }  /* Date */
+
+            /* ── TEACHER REPORT — override ALL inline dark styles for print ── */
+            #teacherReportContent * {
+                color: #000 !important;
+                background: white !important;
+                background-color: white !important;
+                border-color: #bbb !important;
+                -webkit-text-fill-color: #000 !important;
+                font-style: normal !important;
+                box-shadow: none !important;
+                text-shadow: none !important;
+                opacity: 1 !important;
+            }
+            #teacherReportContent div[style*="font-family"] {
+                color: #000 !important;
+            }
+            /* Date header stripe */
+            #teacherReportContent div[style*="border-radius"] > div:first-child {
+                background: #e8e8e8 !important;
+                border: 1px solid #999 !important;
+            }
+            /* Table headers */
+            #teacherReportContent th {
+                background: #ddd !important;
+                color: #000 !important;
+                font-size: 7pt !important;
+                padding: 5px 8px !important;
+                border: 1px solid #999 !important;
+            }
+            /* Table cells */
+            #teacherReportContent td {
+                padding: 6px 8px !important;
+                font-size: 8pt !important;
+                border: 1px solid #ccc !important;
+                color: #000 !important;
+            }
+            /* Coloured badges (pending counts) → black border box */
+            #teacherReportContent span[style*="border-radius:99px"] {
+                background: #fff !important;
+                border: 1.5px solid #333 !important;
+                color: #000 !important;
+                padding: 1px 6px !important;
+                border-radius: 4px !important;
+                font-weight: 700 !important;
+            }
+            /* Tick ✓ and Cross ✗ marks — keep them black and larger */
+            #teacherReportContent span[style*="font-size:1.1rem"] {
+                font-size: 11pt !important;
+                font-weight: 900 !important;
+                color: #000 !important;
+            }
+            /* "Waiting for response" italic */
+            #teacherReportContent span[style*="font-style:italic"] {
+                color: #666 !important;
+                font-style: italic !important;
+                font-size: 7pt !important;
+            }
+            /* Progress bars — hide them in print */
+            #teacherReportContent div[style*="height:7px"],
+            #teacherReportContent div[style*="height: 7px"],
+            #teacherReportContent div[style*="height:8px"] {
+                display: none !important;
+            }
+            /* Avatar circle */
+            #teacherReportContent div[style*="border-radius:50%"] {
+                display: none !important;
+            }
+            /* Zebra rows */
+            #teacherReportContent tr:nth-child(even) td {
+                background: #f5f5f5 !important;
+            }
+        }
+    </style>
+    <!-- Add html2canvas for JPG export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="school-header">
+        <div class="header-inner">
+            <div class="header-logo">
+                <img src="https://ik.imagekit.io/flr6iuzhm/bvm_logo-removebg-preview.png?updatedAt=1755995947678"
+                     alt="BVM"
+                     onerror="this.style.display='none';this.parentElement.textContent='BVM'"/>
+            </div>
+            <div class="header-text">
+                <div class="header-school-name">Bal Vidya Mandir Sr. Sec. School</div>
+                <div class="header-tagline">Sambhal — Examination Management System</div>
+            </div>
+            <div class="header-right">
+                <div id="examName">Half Yearly Examination 2025</div>
+                <div class="header-badge" id="sheetTitle">Collection Sheet</div>
+            </div>
+        </div>
+    </div>
+    <div class="header-divider"></div>
+    <div class="container">
+        
+        <div class="control-panel">
+            <div class="control-row">
+                <div class="date-selector">
+                    <label for="examDate">DATE:</label>
+                    <select id="examDate">
+                        <option value="">Loading dates...</option>
+                    </select>
+                    <select id="classGroup">
+                        <option value="III-VIII" selected>III to VIII</option>
+                        <option value="IX-XI">IX & XI</option>
+                        <option value="X-XII">X & XII</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button class="check-btn" onclick="checkMissingRooms()">🔍 Check Missing Rooms</button>
+                    <button class="collection-btn" onclick="showCollectionSheet()">📋 Collection Sheet</button>
+                    <button class="issuance-btn" onclick="showIssuanceSheet()">📝 Issuance Sheet</button>
+                    <button class="report-btn" onclick="showReportSheet()">📊 Report</button>
+                    <button class="refresh-btn" onclick="refreshAbsentees()">🔄 Refresh Absentees</button>
+                    <button class="teacher-btn" onclick="showTeacherReport()">👩‍🏫 Teacher Report</button>
+                    <button class="print-btn" onclick="doPrint()">🖨️ Print</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="error" class="error" style="display: none;"></div>
+        
+        <!-- Summary Statistics for Missing Rooms -->
+        <div id="summaryStats" class="summary-stats" style="display: none;">
+            <div class="summary-box total">
+                <div class="stat-label">Total Rooms</div>
+                <div class="stat-value" id="totalRooms">0</div>
+            </div>
+            <div class="summary-box submitted">
+                <div class="stat-label">Submitted</div>
+                <div class="stat-value" id="submittedRooms">0</div>
+            </div>
+            <div class="summary-box missing">
+                <div class="stat-label">Missing</div>
+                <div class="stat-value" id="missingRooms">0</div>
+            </div>
+        </div>
+        
+        <!-- Missing Rooms List -->
+        <div id="missingRoomsList" class="collection-sheet" style="display: none;">
+            <div class="sheet-header">
+                <h2>Rooms That Haven't Submitted Attendance</h2>
+            </div>
+            <div id="roomsList" class="rooms-grid">
+            </div>
+        </div>
+        
+
+        <!-- Teacher Report Type Modal -->
+        <div id="trModal" style="display:none;position:fixed;inset:0;z-index:400;
+             background:rgba(12,10,9,.72);backdrop-filter:blur(6px);
+             align-items:center;justify-content:center;">
+            <div style="background:var(--card-bg,#1c1917);border:1px solid var(--border-color,rgba(201,168,76,.2));
+                 border-radius:14px;width:440px;max-width:94vw;overflow:hidden;
+                 box-shadow:0 24px 64px rgba(0,0,0,.6);
+                 transform:translateY(20px);transition:transform .25s cubic-bezier(.34,1.56,.64,1);"
+                 id="trModalBox">
+                <!-- Header -->
+                <div style="background:rgba(0,0,0,.2);padding:16px 22px;border-bottom:1px solid rgba(201,168,76,.15);
+                     display:flex;align-items:center;justify-content:space-between;">
+                    <div>
+                        <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.1rem;
+                             color:#e8c96e;font-weight:600;">Teacher Report</div>
+                        <div style="font-size:.63rem;color:#a8a29e;margin-top:3px;letter-spacing:1px;
+                             text-transform:uppercase;">Choose report type</div>
+                    </div>
+                    <button onclick="document.getElementById('trModal').style.display='none'"
+                        style="background:none;border:none;color:#a8a29e;cursor:pointer;font-size:1.1rem;
+                               padding:4px 8px;border-radius:6px;line-height:1;">✕</button>
+                </div>
+                <!-- Body -->
+                <div style="padding:22px;">
+                    <!-- Two choice buttons -->
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;"
+                         id="trChoiceRow">
+                        <button onclick="trSelectMode('date')"
+                            style="padding:16px 12px;border-radius:10px;border:1.5px solid rgba(201,168,76,.3);
+                                   background:rgba(201,168,76,.08);color:#e8c96e;font-family:inherit;
+                                   font-size:.82rem;font-weight:600;cursor:pointer;transition:all .18s;
+                                   display:flex;flex-direction:column;align-items:center;gap:7px;"
+                            onmouseover="this.style.background='rgba(201,168,76,.18)'"
+                            onmouseout="this.style.background='rgba(201,168,76,.08)'">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                            Date Wise
+                        </button>
+                        <button onclick="trSelectMode('teacher')"
+                            style="padding:16px 12px;border-radius:10px;border:1.5px solid rgba(201,168,76,.3);
+                                   background:rgba(201,168,76,.08);color:#e8c96e;font-family:inherit;
+                                   font-size:.82rem;font-weight:600;cursor:pointer;transition:all .18s;
+                                   display:flex;flex-direction:column;align-items:center;gap:7px;"
+                            onmouseover="this.style.background='rgba(201,168,76,.18)'"
+                            onmouseout="this.style.background='rgba(201,168,76,.08)'">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                            Teacher Wise
+                        </button>
+                    </div>
+
+                    <!-- Teacher search — hidden until teacher mode selected -->
+                    <div id="trTeacherSearch" style="display:none;">
+                        <div style="font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+                             color:#c9a84c;margin-bottom:7px;">Search Teacher</div>
+                        <div style="position:relative;">
+                            <input id="trSearchInput" type="text" placeholder="Start typing a name..."
+                                oninput="trFilterTeachers()"
+                                style="width:100%;padding:10px 36px 10px 12px;border-radius:8px;
+                                       border:1px solid rgba(201,168,76,.3);background:#12100e;
+                                       color:#faf7f2;font-family:inherit;font-size:.88rem;outline:none;
+                                       box-sizing:border-box;"
+                                onfocus="this.style.borderColor='#c9a84c';trFilterTeachers()"
+                                onblur="setTimeout(()=>{document.getElementById('trDropdown').style.display='none'},250)"/>
+                            <svg style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
+                                 pointer-events:none;opacity:.5;"
+                                width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a84c"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                        </div>
+                        <!-- Dropdown list -->
+                        <div id="trDropdown"
+                            style="display:none;max-height:180px;overflow-y:auto;margin-top:4px;
+                                   background:#12100e;border:1px solid rgba(201,168,76,.25);border-radius:8px;
+                                   box-shadow:0 8px 24px rgba(0,0,0,.4);"></div>
+                        <!-- Load button -->
+                        <button id="trLoadBtn" onclick="trLoadTeacherReport()" disabled
+                            style="width:100%;margin-top:14px;padding:12px;border-radius:8px;border:none;
+                                   background:#c9a84c;color:#12100e;font-family:inherit;font-size:.88rem;
+                                   font-weight:700;cursor:pointer;opacity:.4;transition:all .2s;">
+                            Load Teacher Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teacher Progress Report Container -->
+        <div id="teacherReportContainer" class="print-container" style="display:none;">
+            <div id="teacherReportContent"></div>
+        </div>
+
+        <!-- Print Container - Will contain school header and sheets -->
+        <div id="printContainer" class="print-container">
+            <div class="print-school-header">
+                <div class="print-school-name">BAL VIDYA MANDIR, SCHOOL</div>
+                <div class="print-exam-name">Annual Examination 2026</div>
+                <div class="print-exam-date" id="printExamDate"></div>
+            </div>
+            
+            <!-- Collection Sheet -->
+            <div id="collectionSheet" class="collection-sheet">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            
+            <!-- Issuance Sheet -->
+            <div id="issuanceSheet" class="issuance-sheet" style="display: none;">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            
+            <!-- Report Sheet -->
+            <div id="reportSheet" class="report-sheet" style="display: none;">
+                <div class="sheet-header">
+                    <h2>ABSENT STUDENTS REPORT</h2>
+                    <div class="date-class">
+                        <span>DATE: <span id="reportDate"></span></span>
+                        <span id="reportClass">ALL CLASSES</span>
+                    </div>
+                </div>
+                <div id="reportContent">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+                <button class="export-btn" onclick="exportReportToJPG()">📸 Save as JPG</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div id="lastUpdated" class="last-updated"></div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const API_KEY = 'AIzaSyA8IuP2YVIxNZlZYwbBMePjhRFKjicfWlg';
+
+        // ── Print helper — flatten all inline styles on teacher report to black/white ──
+        function doPrint() {
+            const printBtn = document.querySelector('.print-btn');
+            if(printBtn){ printBtn.disabled=true; printBtn.style.opacity='0.5'; }
+
+            const trContent = document.getElementById('teacherReportContent');
+            const isTeacherReport = trContent && document.getElementById('teacherReportContainer').style.display !== 'none';
+
+            function restoreBtn(){
+                if(printBtn){ printBtn.disabled=false; printBtn.style.opacity='1'; }
+            }
+
+            if (!isTeacherReport) {
+                setTimeout(function(){ window.print(); setTimeout(restoreBtn, 800); }, 200);
+                return;
+            }
+
+            // Walk every element inside teacherReportContent and force print-safe inline styles
+            const allEls = trContent.querySelectorAll('*');
+            const saved  = [];
+            allEls.forEach(el => {
+                saved.push(el.getAttribute('style') || '');
+                const tag  = el.tagName;
+                const text = (el.getAttribute('style')||'');
+                let ps = 'color:#000!important;background:white!important;background-color:white!important;' +
+                         'border-color:#bbb!important;box-shadow:none!important;opacity:1!important;';
+                if (tag === 'TABLE') ps += 'border-collapse:collapse!important;width:100%!important;';
+                if (tag === 'TH') ps += 'background:#ddd!important;color:#000!important;font-size:7pt!important;padding:5px 8px!important;border:1px solid #999!important;font-weight:700!important;';
+                if (tag === 'TD') ps += 'font-size:8pt!important;padding:6px 8px!important;border:1px solid #ccc!important;color:#000!important;';
+                if (tag === 'DIV' && text.includes('Cormorant') || (tag==='SPAN' && text.includes('font-family'))) ps += 'font-size:10pt!important;font-weight:700!important;';
+                if (tag === 'SPAN' && text.includes('1.1rem')) ps += 'font-size:12pt!important;font-weight:900!important;';
+                if (tag === 'SPAN' && text.includes('99px')) ps += 'border:1.5px solid #333!important;border-radius:3px!important;padding:1px 6px!important;font-weight:700!important;font-size:7.5pt!important;';
+                if (tag === 'SPAN' && text.includes('italic')) ps += 'font-style:italic!important;color:#555!important;font-size:7pt!important;';
+                if (tag === 'DIV' && (text.includes('height:7px')||text.includes('height: 7px')||text.includes('height:8px')||text.includes('height:3px')||text.includes('height:4px'))) ps += 'display:none!important;';
+                if (tag === 'DIV' && text.includes('border-radius:50%')) ps += 'display:none!important;';
+                if (tag === 'DIV' && text.includes('border-radius') && text.includes('border-bottom:none')) ps += 'background:#e8e8e8!important;border:1px solid #999!important;padding:6px 10px!important;';
+                if (tag === 'TR') ps += 'background:transparent!important;';
+                el.setAttribute('style', ps);
+            });
+
+            setTimeout(function(){
+                window.print();
+                // Restore styles after dialog closes
+                setTimeout(function(){
+                    allEls.forEach(function(el, i){
+                        if (saved[i]) el.setAttribute('style', saved[i]);
+                        else el.removeAttribute('style');
+                    });
+                    restoreBtn();
+                }, 800);
+            }, 200);
+        }
+        window.addEventListener('afterprint', function(){
+            var printBtn = document.querySelector('.print-btn');
+            if(printBtn){ printBtn.disabled=false; printBtn.style.opacity='1'; }
+        });
+        const WORKBOOK_A_ID = '1PdwXDCW20w8qlW8yVbGyz4NuzV-il2wKsOUPQgW0J7E';
+        const WORKBOOK_B_ID = '1dL-YdDxdF778Vnut90Rd2cRLQ_B7tlMKL1BsyXp0EYE';
+        
+        // Global variables
+        let examDates = [];
+        let examName = "";
+        let currentView = "collection";
+        let allRooms = [];
+        let mappingData = []; // Class-room mapping data from Sheet1
+        let absenteesData = {}; // Store absentees data by date
+        let subjectData = {}; // Store subject by date and class name
+        let teacherData = {}; // Store teacher by date and class name
+        let absentStudentsData = []; // Store detailed absent student information
+        let sheet4Data = {}; // Store per-student subject data for classes 11/12 (roll -> subject per date)
+        
+        // Roman numeral to number mapping for class filtering
+        const romanMap = {
+            'III': 3, 'IV': 4, 'V': 5, 'VI': 6, 'VII': 7, 'VIII': 8,
+            'IX': 9, 'X': 10, 'XI': 11, 'XII': 12
+        };
+
+        // Class order mapping for sorting (smallest to largest)
+        const classOrder = {
+            '3 CRE': 1, '3 INN': 2, '3 EXP': 3,
+            '4 CRE': 4, '4 INN': 5, '4 EXP': 6,
+            '5 CRE': 7, '5 INN': 8, '5 EXP': 9,
+            '6 CRE': 10, '6 INN': 11, '6 EXP': 12,
+            '7 CRE': 13, '7 INN': 14, '7 EXP': 15,
+            '8 CRE': 16, '8 INN': 17, '8 EXP': 18,
+            '9 CRE': 19, '9 INN': 20, '9 EXP': 21, '9 ORI': 22, '9 DEV': 23, '9 PAT': 24,
+            'X-A': 25, 'X-B': 26, 'XI-A': 27, 'XI-B': 28, 'XII-A': 29, 'XII-B': 30
+        };
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadExamName();
+            await loadExamDates();
+            await loadSubjectAndTeacherData(); // Load from Sheet6
+            await loadSheet1Data();
+            await loadSheet4Data(); // Load per-student subjects for class 11/12
+            await loadAllRooms();
+            await loadAbsenteesData();
+            updateLastUpdated();
+            
+            // Add event listener for class group change
+            document.getElementById('classGroup').addEventListener('change', function() {
+                if (currentView === 'collection') {
+                    displayCollectionSheet();
+                } else if (currentView === 'issuance') {
+                    displayIssuanceSheet();
+                } else if (currentView === 'report') {
+                    displayReportSheet();
+                }
+            });
+            
+            // Add event listener for exam date change
+            document.getElementById('examDate').addEventListener('change', async function() {
+                await loadAbsenteesData();
+                if (currentView === 'collection') {
+                    displayCollectionSheet();
+                } else if (currentView === 'issuance') {
+                    displayIssuanceSheet();
+                } else if (currentView === 'report') {
+                    displayReportSheet();
+                }
+            });
+            
+            showCollectionSheet();
+        });
+
+        // Load exam name from Workbook A, Sheet1, cell P1
+        async function loadExamName() {
+            try {
+                const response = await fetch(
+                    `https://sheets.googleapis.com/v4/spreadsheets/${WORKBOOK_A_ID}/values/Sheet1!P1?key=${API_KEY}`
+                );
+                
+                if (!response.ok) throw new Error('Failed to fetch exam name');
+                
+                const data = await response.json();
+                if (data.values && data.values[0] && data.values[0][0]) {
+                    examName = data.values[0][0];
+                    document.getElementById('examName').textContent = examName;
+                }
+            } catch (error) {
+                console.error('Error loading exam name:', error);
+            }
+        }
+
+        // Load exam dates from Workbook A, Sheet2 (cells B1, C1, D1, etc.)
+        async function loadExamDates() {
+            try {
+                const response = await fetch(
+                    `https://sheets.googleapis.com/v4/spreadsheets/${WORKBOOK_A_ID}/values/Sheet2!1:1?key=${API_KEY}`
+                );
+                
+                if (!response.ok) throw new Error('Failed to fetch exam dates');
+                
+                const data = await response.json();
+                const headerRow = data.values ? data.values[0] : [];
+                
+                // Start from column B (index 1) onwards for exam dates
+                examDates = headerRow.slice(1).filter(date => date && date.trim() !== '');
+                
+                const select = document.getElementById('examDate');
+                select.innerHTML = '<option value="">Select Date</option>';
+                
+                examDates.forEach((date, index) => {
+                    const option = document.createElement('option');
+                    option.value = date;
+                    option.textContent = date;
+                    if (index === 0) option.selected = true;
+                    select.appendChild(option);
+                });
+                
+            } catch (error) {
+                console.error('Error loading exam dates:', error);
+                loadSampleExamDates();
+            }
+        }
+
+        // Load subject and teacher data from Sheet6
+        async function loadSubjectAndTeacherData() {
+            try {
+                const response = await fetch(
+                    `https://sheets.googleapis.com/v4/spreadsheets/${WORKBOOK_A_ID}/values/Sheet6?key=${API_KEY}`
+                );
+                
+                if (!response.ok) throw new Error('Failed to fetch subject and teacher data from Sheet6');
+                
+                const data = await response.json();
+                
+                if (!data.values || data.values.length < 2) {
+                    throw new Error('No data found in Sheet6');
+                }
+                
+                const rows = data.values;
+                const headerRow = rows[0]; // First row has dates
+                
+                // Subject dates are in columns B through K (index 1 to 10)
+                // Teacher dates are in columns L onwards (index 11+)
+                
+                // Process each row (each class)
+                for (let rowIndex = 1; rowIndex < rows.length; rowIndex++) {
+                    const row = rows[rowIndex];
+                    if (row.length < 1) continue;
+                    
+                    const className = row[0] ? row[0].toString().trim() : ''; // Column A: Class Name
+                    if (!className) continue;
+                    
+                    // Process subject data (columns B to K, index 1 to 10)
+                    // Store as ARRAY to support multiple rows per class (multi-subject split)
+                    for (let colIndex = 1; colIndex <= 10; colIndex++) {
+                        if (colIndex < row.length && colIndex < headerRow.length) {
+                            const date    = headerRow[colIndex] ? headerRow[colIndex].toString().trim() : '';
+                            const subject = row[colIndex]       ? row[colIndex].toString().trim()       : '';
+                            if (date && subject) {
+                                if (!subjectData[date])              subjectData[date] = {};
+                                if (!subjectData[date][className])   subjectData[date][className] = [];
+                                // avoid exact duplicates
+                                if (!subjectData[date][className].includes(subject))
+                                    subjectData[date][className].push(subject);
+                            }
+                        }
+                    }
+
+                    // Process teacher data (columns L onwards, index 11+)
+                    // Also stored as array to match subject rows
+                    for (let colIndex = 11; colIndex < headerRow.length; colIndex++) {
+                        if (colIndex < row.length && colIndex < headerRow.length) {
+                            const date    = headerRow[colIndex] ? headerRow[colIndex].toString().trim() : '';
+                            const teacher = row[colIndex]       ? row[colIndex].toString().trim()       : '';
+                            if (date && teacher) {
+                                if (!teacherData[date])              teacherData[date] = {};
+                                if (!teacherData[date][className])   teacherData[date][className] = [];
+                                if (!teacherData[date][className].includes(teacher))
+                                    teacherData[date][className].push(teacher);
+                            }
+                        }
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Error loading subject and teacher data from Sheet6:', error);
+                loadSampleSubjectAndTeacherData();
+            }
+        }
+
+        // Load sample subject and teacher data
+        function loadSampleSubjectAndTeacherData() {
+            const selectedDate = document.getElementById('examDate').value || '23-Feb-26';
+            
+            subjectData[selectedDate] = {
+                '3 CRE': 'SOCIAL STUDY',
+                '3 INN': 'SOCIAL STUDY',
+                '3 EXP': 'SOCIAL STUDY',
+                '4 CRE': 'SCIENCE',
+                '4 INN': 'SCIENCE',
+                '4 EXP': 'SCIENCE',
+                '5 CRE': 'MATHS',
+                '5 INN': 'MATHS',
+                '5 EXP': 'MATHS',
+                '6 CRE': 'SOCIAL STUDY',
+                '6 INN': 'SOCIAL STUDY',
+                '6 EXP': 'SOCIAL STUDY',
+                '7 CRE': 'ENGLISH',
+                '7 INN': 'ENGLISH',
+                '7 EXP': 'ENGLISH',
+                '8 CRE': 'MATHS',
+                '8 INN': 'MATHS',
+                '8 EXP': 'MATHS',
+                '9 CRE': 'SOCIAL STUDY',
+                '9 INN': 'SOCIAL STUDY',
+                '9 EXP': 'SOCIAL STUDY',
+                '9 ORI': 'SOCIAL STUDY',
+                '9 DEV': 'SOCIAL STUDY',
+                '9 PAT': 'SOCIAL STUDY'
+            };
+            
+            teacherData[selectedDate] = {
+                '3 CRE': 'MR. SHARMA',
+                '3 INN': 'MS. VERMA',
+                '3 EXP': 'MR. GUPTA',
+                '4 CRE': 'MS. SINGH',
+                '4 INN': 'MR. KUMAR',
+                '4 EXP': 'MS. PATEL',
+                '5 CRE': 'MR. YADAV',
+                '5 INN': 'MS. JOSHI',
+                '5 EXP': 'MR. TIWARI',
+                '6 CRE': 'MS. MALHOTRA',
+                '6 INN': 'MR. CHATTERJEE',
+                '6 EXP': 'MS. REDDY',
+                '7 CRE': 'MR. MENON',
+                '7 INN': 'MS. KAUR',
+                '7 EXP': 'MR. KHAN',
+                '8 CRE': 'MS. DAS',
+                '8 INN': 'MR. NAIR',
+                '8 EXP': 'MS. IYER',
+                '9 CRE': 'MR. SINHA',
+                '9 INN': 'MS. ROY',
+                '9 EXP': 'MR. BOSE',
+                '9 ORI': 'MS. CHAKRABORTY',
+                '9 DEV': 'MR. MUKHERJEE',
+                '9 PAT': 'MS. BANERJEE'
+            };
+        }
+
+        // Get subject for a class on selected date
+        // Get subjects for a class on selected date — returns array (supports multi-subject rows)
+        function getSubjectsForClass(className) {
+            const selectedDate = document.getElementById('examDate').value;
+            if (!selectedDate) return [];
+            const arr = subjectData[selectedDate] && subjectData[selectedDate][className];
+            if (!arr) return [];
+            // A single cell may contain "ECONOMICS,GRAPHICS" — split on , or / and flatten
+            const raw = Array.isArray(arr) ? arr : [arr];
+            return raw.flatMap(s => s.split(/\s*[,\/]\s*/).map(x => x.trim()).filter(Boolean));
+        }
+
+        // Get subject for a class (legacy — returns first or '')
+        function getSubjectForClass(className) {
+            const arr = getSubjectsForClass(className);
+            return arr.length ? arr[0] : '';
+        }
+
+        // Get teachers for a class on selected date — returns array
+        function getTeachersForClass(className) {
+            const selectedDate = document.getElementById('examDate').value;
+            if (!selectedDate) return [];
+            const arr = teacherData[selectedDate] && teacherData[selectedDate][className];
+            if (!arr) return [];
+            // A single cell may contain "MR. A,MS. B" — split same way as subjects
+            const raw = Array.isArray(arr) ? arr : [arr];
+            return raw.flatMap(t => t.split(/\s*[,\/]\s*/).map(x => x.trim()).filter(Boolean));
+        }
+
+        // Get teacher for a class (legacy — returns first or '')
+        function getTeacherForClass(className) {
+            const arr = getTeachersForClass(className);
+            return arr.length ? arr[0] : '';
+        }
+
+        // Check if a class has an exam on selected date
+        function hasExam(className) {
+            return getSubjectsForClass(className).length > 0;
+        }
+
+        // Count students in a class taking a specific subject on the selected date.
+        // For classes 11/12: count from Sheet4 (per-student subject data).
+        // For classes 3–10 every student in the class takes the same exam → return null
+        //   so the caller falls back to the full class total.
+        function getSubjectStudentCount(className, subjectName) {
+            const selectedDate = document.getElementById('examDate').value;
+            if (!selectedDate) return null;
+
+            const nameUp = className.toUpperCase();
+            const isUpper = nameUp.startsWith('11') || nameUp.startsWith('12') ||
+                            nameUp.startsWith('XI') || nameUp.startsWith('XII');
+            if (!isUpper) return null;
+
+            const dateMap = sheet4Data[selectedDate];
+            if (!dateMap) return null;
+
+            let count = 0;
+            const prefix = className + '_';
+            for (const key in dateMap) {
+                if (!key.startsWith(prefix)) continue;
+                const subj = dateMap[key];
+                if (subj && subj.trim().toUpperCase() === subjectName.trim().toUpperCase()) count++;
+            }
+            return count;
+        }
+
+        // Get sorted roll numbers for a class+subject from Sheet4
+        function getSubjectRolls(className, subjectName) {
+            const selectedDate = document.getElementById('examDate').value;
+            if (!selectedDate) return [];
+            const dateMap = sheet4Data[selectedDate];
+            if (!dateMap) return [];
+            const prefix = className + '_';
+            const rolls = [];
+            for (const key in dateMap) {
+                if (!key.startsWith(prefix)) continue;
+                const subj = dateMap[key];
+                if (subj && subj.trim().toUpperCase() === subjectName.trim().toUpperCase()) {
+                    const roll = parseInt(key.slice(prefix.length), 10);
+                    if (!isNaN(roll)) rolls.push(roll);
+                }
+            }
+            return rolls.sort((a, b) => a - b);
+        }
+
+        // Compress sorted roll array into compact range string
+        // e.g. [1,5,8,9,10,11,12,13,15] → "1, 5, 8-13, 15"
+        function compressRolls(rolls) {
+            if (!rolls || rolls.length === 0) return '';
+            const parts = [];
+            let start = rolls[0], end = rolls[0];
+            for (let i = 1; i < rolls.length; i++) {
+                if (rolls[i] === end + 1) {
+                    end = rolls[i];
+                } else {
+                    parts.push(start === end ? `${start}` : `${start}-${end}`);
+                    start = end = rolls[i];
+                }
+            }
+            parts.push(start === end ? `${start}` : `${start}-${end}`);
+            return parts.join(', ');
+        }
+
+        // Load all room numbers from Workbook A, Sheet1
+        async function loadAllRooms() {
+            try {
+                const response = await fetch(
+                    `https://sheets.googleapis.com/v4/spreadsheets/${WORKBOOK_A_ID}/values/Sheet1!A:A?key=${API_KEY}`
+                );
+                
+                if (!response.ok) throw new Error('Failed to fetch room numbers');
+                
+                const data = await response.json();
+                
+                if (data.values && data.values.length > 1) {
+                    allRooms = data.values.slice(1)
+                                        .flat()
+                                        .filter(room => room && room.trim() !== '');
+                }
+                
+            } catch (error) {
+                console.error('Error loading room numbers:', error);
+                loadSampleRooms();
+            }
+        }
+
+        // Load all data from Sheet1 for class-room mapping - reads ALL class-section pairs
+        async function loadSheet1Data() {
+            try {
+                const response = await fetch(
+                    `https://sheets.googleapis.com/v4/spreadsheets/${WORKBOOK_A_ID}/values/Sheet1?key=${API_KEY}`
+                );
+                
+                if (!response.ok) throw new Error('Failed to fetch data from Sheet1');
+                
+                const data = await response.json();
+                
+                if (!data.values || data.values.length < 2) {
+                    throw new Error('No data found in Sheet1');
+                }
+                
+                const rows = data.values.slice(1);
+                mappingData = [];
+                
+                rows.forEach((row) => {
+                    if (row.length < 3) return;
+                    
+                    const roomNo = row[0]; // Column A: Room Number
+                    
+                    // Start from column C (index 2) and process ALL class-section pairs
+                    for (let i = 2; i <= row.length - 3; i += 3) {
+                        const className = row[i];
+                        const startRoll = row[i+1];
+                        const endRoll = row[i+2];
+                        
+                        // Only process if we have valid class name
+                        if (className && className.trim() !== '') {
+                            
+                            const cleanClass = className.toString().trim();
+                            const cleanStart = startRoll ? startRoll.toString().trim() : '';
+                            const cleanEnd = endRoll ? endRoll.toString().trim() : '';
+                            
+                            // Skip if start or end is empty
+                            if (!cleanStart || !cleanEnd) continue;
+                            
+                            let start = cleanStart;
+                            let end = cleanEnd;
+                            
+                            // Parse roll numbers (handle potential text like "1 to 21")
+                            if (cleanStart.includes('to')) {
+                                const parts = cleanStart.split('to');
+                                if (parts.length >= 2) {
+                                    start = parts[0].trim();
+                                    end = parts[1].trim();
+                                }
+                            } else if (cleanStart.includes('-')) {
+                                const parts = cleanStart.split('-');
+                                if (parts.length >= 2) {
+                                    start = parts[0].trim();
+                                    end = parts[1].trim();
+                                }
+                            }
+                            
+                            if (cleanEnd.includes('to') && start === cleanStart) {
+                                const parts = cleanEnd.split('to');
+                                if (parts.length >= 2) {
+                                    start = parts[0].trim();
+                                    end = parts[1].trim();
+                                }
+                            } else if (cleanEnd.includes('-') && start === cleanStart) {
+                                const parts = cleanEnd.split('-');
+                                if (parts.length >= 2) {
+                                    start = parts[0].trim();
+                                    end = parts[1].trim();
+                                }
+                            }
+                            
+                            const startNum = parseInt(start);
+                            const endNum = parseInt(end);
+                            
+                            // Skip entries with 0 roll numbers
+                            if (startNum === 0 && endNum === 0) continue;
+                            if (start === '0' && end === '0') continue;
+                            if (cleanStart === '0' && cleanEnd === '0') continue;
+                            
+                            let total = '?';
+                            if (!isNaN(startNum) && !isNaN(endNum) && startNum <= endNum) {
+                                total = endNum - startNum + 1;
+                            }
+                            
+                            mappingData.push({
+                                room: roomNo,
+                                class: cleanClass,
+                                startRoll: start,
+                                endRoll: end,
+                                total: total,
+                                startNum: isNaN(startNum) ? null : startNum,
+                                endNum: isNaN(endNum) ? null : endNum
+                            });
+                        }
+                    }
+                });
+                
+                mappingData.sort((a, b) => a.class.localeCompare(b.class));
+                console.log(`Total mapping entries loaded: ${mappingData.length}`);
+                
+            } catch (error) {
+                console.error('Error loading Sheet1 data:', error);
+                loadSampleMappingData();
+            }
+        }
+
+        // Load Sheet4 — per-student subject schedule for classes 11 & 12
+        async function loadSheet4Data() {
+            try {
+                const response = await fetch(
+                    `https://sheets.googleapis.com/v4/spreadsheets/${WORKBOOK_A_ID}/values/Sheet4?key=${API_KEY}`
+                );
+                if (!response.ok) throw new Error('Sheet4 not found');
+                const data = await response.json();
+                if (!data.values || data.values.length < 2) return;
+
+                const headerRow = data.values[0];
+                sheet4Data = {};
+
+                for (let i = 1; i < headerRow.length; i++) {
+                    const date = headerRow[i] ? headerRow[i].toString().trim() : '';
+                    if (!date) continue;
+                    if (!sheet4Data[date]) sheet4Data[date] = {};
+                    for (let r = 1; r < data.values.length; r++) {
+                        const row = data.values[r];
+                        const roll = row[0] ? row[0].toString().trim() : '';
+                        const cls  = row[5] ? row[5].toString().trim() : '';
+                        const subj = (i < row.length && row[i]) ? row[i].toString().trim() : '';
+                        if (roll && cls) {
+                            sheet4Data[date][cls + '_' + roll] = subj;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.log('Sheet4 not loaded:', e.message);
+                sheet4Data = {};
+            }
+        }
+
+        // Return count of students with NO exam in a roll range for a given class+date
+        function getNoExamCountForRoom(className, startNum, endNum) {
+            if (!startNum || !endNum || isNaN(startNum) || isNaN(endNum)) return 0;
+            const selectedDate = document.getElementById('examDate').value;
+            if (!selectedDate) return 0;
+
+            // Classes 3–10: whole class shares one exam → no per-student no-exam cases
+            const nameUp = className.toUpperCase();
+            const isUpper = nameUp.startsWith('11') || nameUp.startsWith('12') ||
+                            nameUp.startsWith('XI') || nameUp.startsWith('XII');
+            if (!isUpper) return 0;
+
+            const dateMap = sheet4Data[selectedDate];
+            if (!dateMap) return 0;
+
+            let noExamCount = 0;
+            for (let roll = startNum; roll <= endNum; roll++) {
+                const subj = dateMap[className + '_' + roll];
+                if (subj === undefined || subj === null || subj.trim() === '') noExamCount++;
+            }
+            return noExamCount;
+        }
+
+        // Load absentees data from Workbook B and build detailed absent students list
+        async function loadAbsenteesData() {
+            try {
+                const selectedDate = document.getElementById('examDate').value;
+                if (!selectedDate) return;
+                
+                const dateIndex = examDates.indexOf(selectedDate);
+                if (dateIndex === -1) return;
+                
+                const sheetName = `P${dateIndex + 1}`;
+                
+                const response = await fetch(
+                    `https://sheets.googleapis.com/v4/spreadsheets/${WORKBOOK_B_ID}/values/${sheetName}!A:F?key=${API_KEY}`
+                );
+                
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.log(`Sheet ${sheetName} not found`);
+                        return;
+                    }
+                    throw new Error(`Failed to fetch absentees data from ${sheetName}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.values || data.values.length < 2) {
+                    console.log('No absentees data found');
+                    return;
+                }
+                
+                const rows = data.values.slice(1);
+                
+                if (!absenteesData[selectedDate]) {
+                    absenteesData[selectedDate] = {};
+                }
+                
+                // Initialize structure for this date
+                absenteesData[selectedDate].rooms = {}; // Store room-specific ALL_PRESENT markers
+                absenteesData[selectedDate].absentees = {}; // Store absentee lists by class and room
+                
+                // Clear previous absent students data
+                absentStudentsData = [];
+                
+                rows.forEach((row) => {
+                    if (row.length < 6) return;
+                    
+                    const rollNo = row[0] ? row[0].toString().trim() : '';      // Column A: Roll number
+                    const name = row[1] ? row[1].toString().trim() : '';        // Column B: Name
+                    const className = row[2] ? row[2].toString().trim() : '';   // Column C: Class
+                    const subject = row[3] ? row[3].toString().trim() : '';     // Column D: Subject
+                    const roomNo = row[4] ? row[4].toString().trim() : '';      // Column E: Room No
+                    const date = row[5] ? row[5].toString().trim() : '';        // Column F: Date
+                    
+                    // Only process if date matches selected date
+                    if (date !== selectedDate) return;
+                    
+                    // Check if this is an "ALL_PRESENT" marker
+                    if (rollNo.includes('ALL PRESENT') || rollNo.includes('ALL_PRESENT')) {
+                        if (className && className !== 'ALL_PRESENT' && roomNo) {
+                            // Per-class ALL_PRESENT (new format): "9 INN" all present in this room
+                            if (!absenteesData[selectedDate].absentees[className])
+                                absenteesData[selectedDate].absentees[className] = {};
+                            // Only set if not already set (don't overwrite real absent data)
+                            if (!absenteesData[selectedDate].absentees[className][roomNo])
+                                absenteesData[selectedDate].absentees[className][roomNo] = [];
+                        } else if (roomNo) {
+                            // Whole-room ALL_PRESENT (old format fallback)
+                            absenteesData[selectedDate].rooms[roomNo] = 'ALL_PRESENT';
+                        }
+                    }
+                    // Normal absentee entry
+                    else if (rollNo && !isNaN(parseInt(rollNo)) && className && roomNo) {
+                        if (!absenteesData[selectedDate].absentees[className]) {
+                            absenteesData[selectedDate].absentees[className] = {};
+                        }
+                        
+                        if (!absenteesData[selectedDate].absentees[className][roomNo]) {
+                            absenteesData[selectedDate].absentees[className][roomNo] = [];
+                        }
+                        
+                        absenteesData[selectedDate].absentees[className][roomNo].push(rollNo);
+                        
+                        // Add to detailed absent students list for report
+                        absentStudentsData.push({
+                            rollNo: rollNo,
+                            name: name,
+                            class: className,
+                            subject: subject,
+                            room: roomNo,
+                            date: selectedDate
+                        });
+                    }
+                });
+                
+                // Sort absent students by class order (smallest to largest) and then by roll number
+                absentStudentsData.sort((a, b) => {
+                    // First sort by class order
+                    const classAOrder = classOrder[a.class] || 999;
+                    const classBOrder = classOrder[b.class] || 999;
+                    if (classAOrder !== classBOrder) {
+                        return classAOrder - classBOrder;
+                    }
+                    
+                    // Then sort by roll number
+                    const aNum = parseInt(a.rollNo);
+                    const bNum = parseInt(b.rollNo);
+                    if (!isNaN(aNum) && !isNaN(bNum)) {
+                        return aNum - bNum;
+                    }
+                    return a.rollNo.localeCompare(b.rollNo);
+                });
+                
+                console.log(`Loaded ${absentStudentsData.length} absent students`);
+                
+                if (currentView === 'collection') {
+                    displayCollectionSheet();
+                } else if (currentView === 'issuance') {
+                    displayIssuanceSheet();
+                } else if (currentView === 'report') {
+                    displayReportSheet();
+                }
+                
+            } catch (error) {
+                console.error('Error loading absentees data:', error);
+                loadSampleAbsenteesData();
+            }
+        }
+
+        // Load sample absentees data
+        function loadSampleAbsenteesData() {
+            const selectedDate = document.getElementById('examDate').value || '23-Feb-26';
+            
+            if (!absenteesData[selectedDate]) {
+                absenteesData[selectedDate] = {
+                    rooms: {},
+                    absentees: {}
+                };
+            }
+            
+            // Add ALL PRESENT markers for specific rooms
+            absenteesData[selectedDate].rooms = {
+                'D-02': 'ALL_PRESENT',
+                'D-03': 'ALL_PRESENT',
+                'D-04': 'ALL_PRESENT',
+                'D-05': 'ALL_PRESENT',
+                'D-06': 'ALL_PRESENT',
+                'D-11': 'ALL_PRESENT'
+            };
+            
+            // Add specific absentees for rooms that have absent students
+            absenteesData[selectedDate].absentees = {
+                '3 CRE': {
+                    'D-01': ['1', '3']
+                },
+                '5 INN': {
+                    'D-11': ['35']
+                }
+            };
+            
+            // Add sample detailed absent students data
+            absentStudentsData = [
+                { rollNo: '1', name: 'AANYA TOMAR', class: '3 CRE', subject: 'SOCIAL STUDY', room: 'D-01', date: selectedDate },
+                { rollNo: '3', name: 'FAHAD AHMAD', class: '3 CRE', subject: 'SOCIAL STUDY', room: 'D-01', date: selectedDate },
+                { rollNo: '35', name: 'VANSH KUMAR', class: '5 INN', subject: 'MATHS', room: 'D-11', date: selectedDate }
+            ];
+            
+            // Sort by class order
+            absentStudentsData.sort((a, b) => {
+                const classAOrder = classOrder[a.class] || 999;
+                const classBOrder = classOrder[b.class] || 999;
+                if (classAOrder !== classBOrder) {
+                    return classAOrder - classBOrder;
+                }
+                return parseInt(a.rollNo) - parseInt(b.rollNo);
+            });
+        }
+
+        // Get absentees for a specific class and room on selected date
+        function getAbsenteesForRoom(className, roomNo) {
+            const selectedDate = document.getElementById('examDate').value;
+            if (!selectedDate) return { status: 'WAITING', count: 0, displayText: 'Waiting For Absentees' };
+            
+            const dateData = absenteesData[selectedDate];
+            if (!dateData) return { status: 'WAITING', count: 0, displayText: 'Waiting For Absentees' };
+            
+            // FIRST: Check if there are absentees for this specific class and room
+            if (dateData.absentees && 
+                dateData.absentees[className] && 
+                dateData.absentees[className][roomNo]) {
+                
+                const absentees = dateData.absentees[className][roomNo];
+                if (absentees.length > 0) {
+                    const sortedAbsentees = [...absentees].sort((a, b) => {
+                        const aNum = parseInt(a);
+                        const bNum = parseInt(b);
+                        if (!isNaN(aNum) && !isNaN(bNum)) {
+                            return aNum - bNum;
+                        }
+                        return a.localeCompare(b);
+                    });
+                    
+                    const rollNumbers = sortedAbsentees.join(', ');
+                    
+                    return {
+                        status: 'HAS_ABSENTEES',
+                        count: absentees.length,
+                        displayText: rollNumbers
+                    };
+                } else {
+                    // Empty array means all present for this specific class
+                    return { status: 'ALL_PRESENT', count: 0, displayText: 'All Present' };
+                }
+            }
+            
+            // SECOND: Check if this specific room has an ALL PRESENT marker
+            if (dateData.rooms && dateData.rooms[roomNo] === 'ALL_PRESENT') {
+                return { status: 'ALL_PRESENT', count: 0, displayText: 'All Present' };
+            }
+            
+            // No data found for this room
+            return { status: 'WAITING', count: 0, displayText: 'Waiting For Absentees' };
+        }
+
+        // Get all absentees for a class across all rooms
+        function getAllAbsenteesForClass(className) {
+            const selectedDate = document.getElementById('examDate').value;
+            if (!selectedDate) return { status: 'WAITING', absentees: [], displayText: 'Waiting For Absentees' };
+            
+            const dateData = absenteesData[selectedDate];
+            if (!dateData) return { status: 'WAITING', absentees: [], displayText: 'Waiting For Absentees' };
+            
+            // Get all rooms for this class from mapping data
+            const classRooms = mappingData.filter(item => item.class === className);
+            
+            // Collect all absentees from all rooms
+            let allAbsentees = [];
+            let allPresentCount = 0;
+            let waitingCount = 0;
+            
+            classRooms.forEach(room => {
+                const absenteesInfo = getAbsenteesForRoom(className, room.room);
+                if (absenteesInfo.status === 'HAS_ABSENTEES') {
+                    // Split the display text if it contains multiple roll numbers
+                    const rolls = absenteesInfo.displayText.split(', ');
+                    allAbsentees.push(...rolls);
+                } else if (absenteesInfo.status === 'ALL_PRESENT') {
+                    allPresentCount++;
+                } else if (absenteesInfo.status === 'WAITING') {
+                    waitingCount++;
+                }
+            });
+            
+            // Sort absentees by roll number
+            allAbsentees.sort((a, b) => {
+                const aNum = parseInt(a);
+                const bNum = parseInt(b);
+                if (!isNaN(aNum) && !isNaN(bNum)) {
+                    return aNum - bNum;
+                }
+                return a.localeCompare(b);
+            });
+            
+            // Format absentees as comma-separated roll numbers
+            const rollNumbers = allAbsentees.join(', ');
+            
+            if (waitingCount > 0) {
+                return { status: 'WAITING', absentees: allAbsentees, displayText: 'Waiting For Absentees' };
+            } else if (allAbsentees.length > 0) {
+                return { status: 'HAS_ABSENTEES', absentees: allAbsentees, displayText: rollNumbers };
+            } else {
+                return { status: 'ALL_PRESENT', absentees: [], displayText: 'All Present' };
+            }
+        }
+
+        // Get total students for a class across all rooms (excludes no-exam students)
+        function getTotalStudentsForClass(className) {
+            const classRooms = mappingData.filter(item => item.class === className);
+            let minRoll = Infinity;
+            let maxRoll = -Infinity;
+            let totalStudents = 0;
+
+            classRooms.forEach(room => {
+                if (typeof room.total === 'number') {
+                    const noExam = getNoExamCountForRoom(className, room.startNum, room.endNum);
+                    totalStudents += room.total - noExam;
+                }
+                if (room.startNum !== null && room.startNum < minRoll) minRoll = room.startNum;
+                if (room.endNum   !== null && room.endNum   > maxRoll) maxRoll = room.endNum;
+            });
+
+            return {
+                total: totalStudents,
+                range: minRoll !== Infinity && maxRoll !== -Infinity ? `${minRoll} TO ${maxRoll}` : 'N/A',
+                displayText: `${minRoll !== Infinity ? minRoll : '?'} TO ${maxRoll !== -Infinity ? maxRoll : '?'} = ${totalStudents}`
+            };
+        }
+
+        // Check missing rooms function
+        async function checkMissingRooms() {
+            currentView = 'missing';
+            document.getElementById('sheetTitle').textContent = 'Check Missing Rooms';
+            document.getElementById('teacherReportContainer').style.display = 'none';
+            
+            const select = document.getElementById('examDate');
+            const selectedDate = select.value;
+            
+            if (!selectedDate) {
+                showError('Please select an exam date');
+                return;
+            }
+            
+            // Hide other sheets, show missing rooms
+            document.getElementById('printContainer').style.display = 'none';
+            document.getElementById('issuanceSheet').style.display = 'none';
+            document.getElementById('reportSheet').style.display = 'none';
+            document.getElementById('summaryStats').style.display = 'flex';
+            document.getElementById('missingRoomsList').style.display = 'block';
+            
+            const roomsList = document.getElementById('roomsList');
+            roomsList.innerHTML = '<div class="loading">🔍 Checking attendance...</div>';
+            
+            try {
+                const dateIndex = examDates.indexOf(selectedDate);
+                if (dateIndex === -1) throw new Error('Date not found');
+                
+                const sheetName = `P${dateIndex + 1}`;
+                
+                const response = await fetch(
+                    `https://sheets.googleapis.com/v4/spreadsheets/${WORKBOOK_B_ID}/values/${sheetName}!E:E?key=${API_KEY}`
+                );
+                
+                let submittedRooms = [];
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.values && data.values.length > 1) {
+                        const allEntries = data.values.slice(1)
+                                            .flat()
+                                            .filter(room => room && room.trim() !== '');
+                        // Deduplicate — each room counted only once
+                        submittedRooms = [...new Set(allEntries.map(r => r.trim()))];
+                    }
+                }
+                
+                const totalRooms = allRooms.length;
+                const submittedCount = submittedRooms.length;
+                const missingCount = totalRooms - submittedCount;
+                
+                const missingRooms = allRooms.filter(room => !submittedRooms.includes(room));
+                
+                document.getElementById('totalRooms').textContent = totalRooms;
+                document.getElementById('submittedRooms').textContent = submittedCount;
+                document.getElementById('missingRooms').textContent = missingCount;
+                
+                displayMissingRooms(missingRooms);
+                updateLastUpdated(`Last checked: ${selectedDate} at ${new Date().toLocaleTimeString()}`);
+                
+            } catch (error) {
+                showError('Failed to check attendance: ' + error.message);
+                roomsList.innerHTML = '<div class="no-data">Error loading data</div>';
+            }
+        }
+
+        // Display missing rooms
+        function displayMissingRooms(missingRooms) {
+            const roomsList = document.getElementById('roomsList');
+            
+            if (missingRooms.length === 0) {
+                roomsList.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; background: #e8f5e9; color: #2e7d32; border-radius: 8px;">✅ All rooms have submitted attendance! 🎉</div>';
+                return;
+            }
+            
+            missingRooms.sort((a, b) => {
+                const numA = parseInt(a);
+                const numB = parseInt(b);
+                if (!isNaN(numA) && !isNaN(numB)) {
+                    return numA - numB;
+                }
+                return String(a).localeCompare(String(b));
+            });
+            
+            let html = '';
+            missingRooms.forEach(room => {
+                html += `
+                    <div class="room-card">
+                        🏢 ${room}
+                    </div>
+                `;
+            });
+            
+            roomsList.innerHTML = html;
+        }
+
+        // Filter mapping data by class group
+        function getFilteredMappingData() {
+            const group = document.getElementById('classGroup').value;
+            
+            return mappingData.filter(item => {
+                const classParts = item.class.split(' ');
+                let prefix = classParts[0];
+                
+                if (classParts.length === 1 && item.class.includes('-')) {
+                    prefix = item.class.split('-')[0];
+                }
+                
+                if (group === 'III-VIII') {
+                    if (!isNaN(parseInt(prefix))) {
+                        const classNum = parseInt(prefix);
+                        return classNum >= 3 && classNum <= 8;
+                    } else {
+                        const classNum = romanMap[prefix];
+                        return classNum >= 3 && classNum <= 8;
+                    }
+                } else if (group === 'IX-XI') {
+                    if (!isNaN(parseInt(prefix))) {
+                        const classNum = parseInt(prefix);
+                        return classNum === 9 || classNum === 11;
+                    } else {
+                        return prefix === 'IX' || prefix === 'XI';
+                    }
+                } else if (group === 'X-XII') {
+                    if (!isNaN(parseInt(prefix))) {
+                        const classNum = parseInt(prefix);
+                        return classNum === 10 || classNum === 12;
+                    } else {
+                        return prefix === 'X' || prefix === 'XII';
+                    }
+                }
+                return false;
+            });
+        }
+
+        // Get filtered mapping data that also have exams on selected date (for Collection Sheet)
+        function getFilteredMappingDataWithExam() {
+            const filteredData = getFilteredMappingData();
+            return filteredData.filter(item => hasExam(item.class));
+        }
+
+        // Get unique classes from filtered data that have exams on selected date
+        function getUniqueClassesWithExam() {
+            const filteredData = getFilteredMappingData();
+            const uniqueClasses = new Set();
+            
+            filteredData.forEach(item => {
+                if (hasExam(item.class)) {
+                    uniqueClasses.add(item.class);
+                }
+            });
+            
+            return Array.from(uniqueClasses).sort((a, b) => {
+                const aNum = parseInt(a.split(' ')[0]) || romanMap[a.split('-')[0]] || 0;
+                const bNum = parseInt(b.split(' ')[0]) || romanMap[b.split('-')[0]] || 0;
+                if (aNum !== bNum) return aNum - bNum;
+                return a.localeCompare(b);
+            });
+        }
+
+        // Show Collection Sheet
+        function showCollectionSheet() {
+            currentView = 'collection';
+            document.getElementById('sheetTitle').textContent = 'COLLECTION SHEET';
+            document.getElementById('teacherReportContainer').style.display = 'none';
+            
+            // Set date in print header
+            const _d = document.getElementById('examDate').value;
+            document.getElementById('printExamDate').textContent = _d ? 'Date : ' + _d : '';
+            
+            // Hide other views
+            document.getElementById('summaryStats').style.display = 'none';
+            document.getElementById('missingRoomsList').style.display = 'none';
+            document.getElementById('issuanceSheet').style.display = 'none';
+            document.getElementById('reportSheet').style.display = 'none';
+            
+            // Show print container with collection sheet
+            const printContainer = document.getElementById('printContainer');
+            printContainer.style.display = 'block';
+            
+            // Show collection sheet, hide others
+            document.getElementById('collectionSheet').style.display = 'block';
+            document.getElementById('issuanceSheet').style.display = 'none';
+            document.getElementById('reportSheet').style.display = 'none';
+            
+            displayCollectionSheet();
+        }
+
+        // Display Collection Sheet with proper table format - only classes with exams
+        function displayCollectionSheet() {
+            const filteredData = getFilteredMappingDataWithExam();
+            
+            if (filteredData.length === 0) {
+                document.getElementById('collectionSheet').innerHTML = '<div class="loading">No data available for selected class group or no exams on this date</div>';
+                return;
+            }
+            
+            const selectedDate = document.getElementById('examDate').value;
+            const classGroup = document.getElementById('classGroup').value;
+            const classText = document.getElementById('classGroup').selectedOptions[0].text;
+            
+            // Group data by class
+            const groupedByClass = {};
+            filteredData.forEach(item => {
+                if (!groupedByClass[item.class]) {
+                    groupedByClass[item.class] = [];
+                }
+                groupedByClass[item.class].push(item);
+            });
+            
+            // Sort classes
+            const sortedClasses = Object.keys(groupedByClass).sort((a, b) => {
+                const aNum = parseInt(a.split(' ')[0]) || romanMap[a.split('-')[0]] || 0;
+                const bNum = parseInt(b.split(' ')[0]) || romanMap[b.split('-')[0]] || 0;
+                if (aNum !== bNum) return aNum - bNum;
+                return a.localeCompare(b);
+            });
+            
+            // Start building the table
+            let html = `
+                <div class="sheet-header">
+                    <h2>COLLECTION SHEET</h2>
+                    <div class="date-class">
+                        <span>DATE: ${selectedDate || '11/09/25'}</span>
+                        <span>CLASS - ${classText}</span>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th rowspan="2">CLASS</th>
+                            <th rowspan="2">ROOM</th>
+                            <th colspan="3">ROLL NUMBERS</th>
+                            <th rowspan="2">ABSENTEES</th>
+                            <th rowspan="2">COPIES</th>
+                            <th rowspan="2">SIGN</th>
+                        </tr>
+                        <tr>
+                            <th>FROM</th>
+                            <th>TO</th>
+                            <th>TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            sortedClasses.forEach((className, classIndex) => {
+                const rooms = groupedByClass[className];
+                let classTotal = 0;
+                let classCopies = 0;
+                
+                rooms.forEach((room, roomIndex) => {
+                    const absenteesInfo = getAbsenteesForRoom(className, room.room);
+
+                    // Effective total = seating total minus no-exam students
+                    const noExam = typeof room.total === 'number'
+                        ? getNoExamCountForRoom(className, room.startNum, room.endNum)
+                        : 0;
+                    const effectiveTotal = typeof room.total === 'number'
+                        ? room.total - noExam
+                        : room.total;
+                    
+                    // Calculate copies for this room
+                    let copies = '';
+                    if (typeof effectiveTotal === 'number') {
+                        if (absenteesInfo.status === 'ALL_PRESENT') {
+                            copies = effectiveTotal;
+                        } else if (absenteesInfo.status === 'HAS_ABSENTEES') {
+                            copies = effectiveTotal - absenteesInfo.count;
+                        }
+                    }
+                    
+                    // Add to class totals
+                    classTotal += (typeof effectiveTotal === 'number' ? effectiveTotal : 0);
+                    if (copies !== '') {
+                        classCopies += (typeof copies === 'number' ? copies : 0);
+                    }
+                    
+                    // Build roll division for 11/12 classes: show which rolls in this room have an exam
+                    const nameUp = className.toUpperCase();
+                    const isUpper = nameUp.startsWith('11') || nameUp.startsWith('12') ||
+                                    nameUp.startsWith('XI') || nameUp.startsWith('XII');
+                    let totalCellContent = `${effectiveTotal}`;
+                    if (isUpper && room.startNum && room.endNum) {
+                        const selectedDate = document.getElementById('examDate').value;
+                        const dateMap = sheet4Data[selectedDate];
+                        if (dateMap) {
+                            const examRolls = [];
+                            for (let r = room.startNum; r <= room.endNum; r++) {
+                                const subj = dateMap[className + '_' + r];
+                                if (subj && subj.trim() !== '') examRolls.push(r);
+                            }
+                            const rollDiv = compressRolls(examRolls);
+                            if (rollDiv) {
+                                totalCellContent = `<strong>${effectiveTotal}</strong><div style="font-size:0.7em;color:#555;margin-top:2px;font-weight:normal;">${rollDiv}</div>`;
+                            }
+                        }
+                    }
+
+                    // Add room row with empty signature cell
+                    html += `<tr>
+                        ${roomIndex === 0 ? `<td rowspan="${rooms.length + 1}" style="background: #f0f0f0; font-weight: bold; text-align: center; vertical-align: middle;">${className}</td>` : ''}
+                        <td style="text-align: center;">${room.room}</td>
+                        <td style="text-align: center;">${room.startRoll}</td>
+                        <td style="text-align: center;">${room.endRoll}</td>
+                        <td style="text-align: center; vertical-align: top; padding: 4px;">${totalCellContent}</td>
+                        <td style="text-align: center;">${absenteesInfo.displayText}</td>
+                        <td style="text-align: center;">${copies}</td>
+                        <td></td>
+                    </tr>`;
+                });
+                
+                // Add total row for this class
+                html += `<tr class="total-row">
+                    <td colspan="3" style="text-align: right; font-weight: bold;">TOTAL=</td>
+                    <td style="text-align: center; font-weight: bold;">${classTotal}</td>
+                    <td style="text-align: center;"></td>
+                    <td style="text-align: center; font-weight: bold;">${classCopies || ''}</td>
+                    <td style="text-align: center;"></td>
+                </tr>`;
+                
+                if (classIndex < sortedClasses.length - 1) {
+                    html += `<tr style="height: 5px;"><td colspan="8" style="background: #ddd; padding: 0;"></td></tr>`;
+                }
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('collectionSheet').innerHTML = html;
+        }
+
+        // Show Issuance Sheet
+        function showIssuanceSheet() {
+            currentView = 'issuance';
+            document.getElementById('sheetTitle').textContent = 'ISSUANCE SHEET';
+            document.getElementById('teacherReportContainer').style.display = 'none';
+            
+            // Set date in print header
+            const _d = document.getElementById('examDate').value;
+            document.getElementById('printExamDate').textContent = _d ? 'Date : ' + _d : '';
+            
+            // Hide other views
+            document.getElementById('summaryStats').style.display = 'none';
+            document.getElementById('missingRoomsList').style.display = 'none';
+            document.getElementById('collectionSheet').style.display = 'none';
+            document.getElementById('reportSheet').style.display = 'none';
+            
+            // Show print container with issuance sheet
+            const printContainer = document.getElementById('printContainer');
+            printContainer.style.display = 'block';
+            
+            // Show issuance sheet
+            document.getElementById('issuanceSheet').style.display = 'block';
+            document.getElementById('collectionSheet').style.display = 'none';
+            document.getElementById('reportSheet').style.display = 'none';
+            
+            displayIssuanceSheet();
+        }
+
+        // Display Issuance Sheet with subject and teacher from Sheet6 - only classes with exams
+        function displayIssuanceSheet() {
+            const uniqueClasses = getUniqueClassesWithExam();
+            
+            if (uniqueClasses.length === 0) {
+                document.getElementById('issuanceSheet').innerHTML = '<div class="loading">No classes with exams on this date</div>';
+                return;
+            }
+            
+            const selectedDate = document.getElementById('examDate').value;
+            const classGroup = document.getElementById('classGroup').value;
+            const classText = document.getElementById('classGroup').selectedOptions[0].text;
+            
+            let html = `
+                <div class="sheet-header">
+                    <h2>ISSUANCE SHEET</h2>
+                    <div class="date-class">
+                        <span>DATE: ${selectedDate || '11/09/25'}</span>
+                        <span>CLASS - ${classText}</span>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>CLASS</th>
+                            <th>SUBJECT</th>
+                            <th>TOTAL STUDENTS</th>
+                            <th>ABSENTEES</th>
+                            <th>COPIES</th>
+                            <th>TEACHER</th>
+                            <th>SIGN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            let grandTotalStudents = 0;
+            let grandTotalCopies   = 0;
+
+            uniqueClasses.forEach(className => {
+
+                // ── Step 1: get subjects & teachers as arrays from Sheet6 ──────────
+                const subjects = getSubjectsForClass(className);   // e.g. ['ECONOMICS','GRAPHICS']
+                const teachers = getTeachersForClass(className);   // e.g. ['MR. A','MS. B']
+
+                // ── Step 2: build a temporary table of { subject, studentCount } ──
+                // For each subject, look up the student count from Sheet4 (classes 11/12)
+                // or fall back to the full class total (classes 3–10, single subject)
+                const totalInfo    = getTotalStudentsForClass(className);
+                const classTotalSt = totalInfo.total;
+
+                const subjectRows = subjects.map((subj, idx) => {
+                    const sheet4Count = getSubjectStudentCount(className, subj);
+                    // sheet4Count is null for classes 3–10 (use class total)
+                    // sheet4Count is a number for 11/12 (exact count from Sheet4)
+                    const studentCount = (sheet4Count !== null) ? sheet4Count : classTotalSt;
+                    // Fetch compressed roll list (only meaningful for 11/12 with Sheet4 data)
+                    const rolls       = (sheet4Count !== null) ? getSubjectRolls(className, subj) : [];
+                    const rollDisplay = compressRolls(rolls);
+                    return {
+                        name:        subj,
+                        teacher:     teachers[idx] || teachers[0] || '',
+                        count:       studentCount,
+                        rollDisplay: rollDisplay   // e.g. "1, 5, 8-13, 15"
+                    };
+                });
+
+                // ── Step 3: grand total students ─────────────────────────────────
+                // If multiple subjects → sum each subject's count
+                // If single subject   → add class total once
+                if (subjectRows.length > 1) {
+                    subjectRows.forEach(r => { grandTotalStudents += r.count; });
+                } else {
+                    grandTotalStudents += classTotalSt;
+                }
+
+                // ── Step 4: determine TOTAL STUDENTS cell spanning ───────────────
+                // Span when single subject (all rows share same total)
+                // Per-row when multiple subjects (each has its own count)
+                const spanTotal = subjectRows.length === 1;
+
+                // ── Step 5: render each subject row ──────────────────────────────
+                subjectRows.forEach((subj, idx) => {
+
+                    // Absentees filtered by class + subject
+                    let absenteesInfo;
+                    if (subjectRows.length > 1) {
+                        const subjectAbsentees = absentStudentsData
+                            .filter(s => s.class === className &&
+                                        s.subject.trim().toUpperCase() === subj.name.toUpperCase())
+                            .map(s => s.rollNo);
+
+                        const isWaiting = mappingData
+                            .filter(item => item.class === className)
+                            .some(room => getAbsenteesForRoom(className, room.room).status === 'WAITING');
+
+                        if (isWaiting && subjectAbsentees.length === 0) {
+                            absenteesInfo = { status: 'WAITING',       absentees: [],         displayText: 'Waiting For Absentees' };
+                        } else if (subjectAbsentees.length > 0) {
+                            const sorted = subjectAbsentees.sort((a, b) => parseInt(a) - parseInt(b));
+                            absenteesInfo = { status: 'HAS_ABSENTEES', absentees: sorted,     displayText: sorted.join(', ') };
+                        } else {
+                            absenteesInfo = { status: 'ALL_PRESENT',   absentees: [],         displayText: 'All Present' };
+                        }
+                    } else {
+                        absenteesInfo = getAllAbsenteesForClass(className);
+                    }
+
+                    // Copies = studentCount for this subject − absent count
+                    let copiesIssued = '';
+                    if (absenteesInfo.status === 'ALL_PRESENT') {
+                        copiesIssued = subj.count;
+                    } else if (absenteesInfo.status === 'HAS_ABSENTEES') {
+                        copiesIssued = subj.count - absenteesInfo.absentees.length;
+                    }
+                    if (typeof copiesIssued === 'number') grandTotalCopies += copiesIssued;
+
+                    // TOTAL STUDENTS display: count on top, compact roll list below (when available)
+                    const rollLine = subj.rollDisplay
+                        ? `<div style="font-size:0.7em;color:#555;margin-top:3px;line-height:1.4;font-weight:normal;">${subj.rollDisplay}</div>`
+                        : '';
+                    const totalDisplay = spanTotal
+                        ? totalInfo.displayText          // "1 TO 40 = 40" for single-subject classes
+                        : `<strong>${subj.count}</strong>${rollLine}`;
+
+                    if (idx === 0) {
+                        const totalCell = spanTotal
+                            ? `<td rowspan="${subjectRows.length}" style="text-align:center;vertical-align:middle;">${totalDisplay}</td>`
+                            : `<td style="text-align:center;vertical-align:top;padding:6px 4px;">${totalDisplay}</td>`;
+
+                        html += `
+                            <tr>
+                                <td rowspan="${subjectRows.length}" style="font-weight:600;text-align:center;vertical-align:middle;">${className}</td>
+                                <td style="text-align:center;">${subj.name}</td>
+                                ${totalCell}
+                                <td style="text-align:center;">${absenteesInfo.displayText}</td>
+                                <td style="text-align:center;">${copiesIssued}</td>
+                                <td style="text-align:center;">${subj.teacher}</td>
+                                <td></td>
+                            </tr>`;
+                    } else {
+                        const totalCell = spanTotal ? '' : `<td style="text-align:center;vertical-align:top;padding:6px 4px;">${totalDisplay}</td>`;
+                        html += `
+                            <tr>
+                                <td style="text-align:center;">${subj.name}</td>
+                                ${totalCell}
+                                <td style="text-align:center;">${absenteesInfo.displayText}</td>
+                                <td style="text-align:center;">${copiesIssued}</td>
+                                <td style="text-align:center;">${subj.teacher}</td>
+                                <td></td>
+                            </tr>`;
+                    }
+                });
+            });
+            
+            html += `
+                <tr style="background: #e8f5e9; font-weight: 600;">
+                    <td colspan="2" style="text-align: right;">GRAND TOTAL=</td>
+                    <td style="text-align: center;">${grandTotalStudents}</td>
+                    <td style="text-align: center;"></td>
+                    <td style="text-align: center;">${grandTotalCopies}</td>
+                    <td style="text-align: center;"></td>
+                    <td style="text-align: center;"></td>
+                </tr>
+            `;
+            
+            html += `
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('issuanceSheet').innerHTML = html;
+        }
+
+        // Show Report Sheet
+        function showReportSheet() {
+            currentView = 'report';
+            document.getElementById('sheetTitle').textContent = 'ABSENT STUDENTS REPORT';
+            document.getElementById('teacherReportContainer').style.display = 'none';
+            
+            // Set date in print header
+            const _d = document.getElementById('examDate').value;
+            document.getElementById('printExamDate').textContent = _d ? 'Date : ' + _d : '';
+            
+            // Hide other views
+            document.getElementById('summaryStats').style.display = 'none';
+            document.getElementById('missingRoomsList').style.display = 'none';
+            document.getElementById('collectionSheet').style.display = 'none';
+            document.getElementById('issuanceSheet').style.display = 'none';
+            
+            // Show print container with report sheet
+            const printContainer = document.getElementById('printContainer');
+            printContainer.style.display = 'block';
+            
+            // Show report sheet
+            document.getElementById('reportSheet').style.display = 'block';
+            document.getElementById('collectionSheet').style.display = 'none';
+            document.getElementById('issuanceSheet').style.display = 'none';
+            
+            displayReportSheet();
+        }
+
+        // Display Report Sheet with absent students (sorted by class order)
+        function displayReportSheet() {
+            const selectedDate = document.getElementById('examDate').value;
+            const classGroup = document.getElementById('classGroup').value;
+            const classText = document.getElementById('classGroup').selectedOptions[0].text;
+            
+            document.getElementById('reportDate').textContent = selectedDate || 'N/A';
+            document.getElementById('reportClass').textContent = `CLASS - ${classText}`;
+            
+            if (absentStudentsData.length === 0) {
+                document.getElementById('reportContent').innerHTML = '<div class="loading">No absent students found for selected date</div>';
+                return;
+            }
+            
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Roll No.</th>
+                            <th>Student Name</th>
+                            <th>Class</th>
+                            <th>Subject</th>
+                            <th>Room</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            absentStudentsData.forEach(student => {
+                html += `
+                    <tr class="absentee-row">
+                        <td style="text-align: center; font-weight: 600;">${student.rollNo}</td>
+                        <td>${student.name}</td>
+                        <td style="text-align: center;">${student.class}</td>
+                        <td style="text-align: center;">${student.subject}</td>
+                        <td style="text-align: center;">${student.room}</td>
+                        <td style="text-align: center;">${student.date}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+                <p style="margin-top: 15px; font-weight: bold;">Total Absent Students: ${absentStudentsData.length}</p>
+            `;
+            
+            document.getElementById('reportContent').innerHTML = html;
+        }
+
+        // Export report to JPG
+        function exportReportToJPG() {
+            if (absentStudentsData.length === 0) {
+                alert('No data to export');
+                return;
+            }
+            
+            const reportElement = document.getElementById('reportContent');
+            const reportHeader = document.querySelector('.report-sheet .sheet-header');
+            
+            // Create a container for the report image
+            const container = document.createElement('div');
+            container.style.backgroundColor = 'white';
+            container.style.padding = '20px';
+            container.style.fontFamily = 'Arial, sans-serif';
+            container.style.width = '1000px'; // Fixed width for consistent image size
+            
+            // Add header
+            const headerClone = reportHeader.cloneNode(true);
+            headerClone.style.marginBottom = '20px';
+            container.appendChild(headerClone);
+            
+            // Add table
+            const table = document.querySelector('#reportContent table').cloneNode(true);
+            table.style.width = '100%';
+            table.style.borderCollapse = 'collapse';
+            table.style.fontSize = '12px';
+            
+            // Style table for image
+            const ths = table.querySelectorAll('th');
+            ths.forEach(th => {
+                th.style.backgroundColor = '#333';
+                th.style.color = 'white';
+                th.style.padding = '8px';
+                th.style.border = '1px solid #555';
+            });
+            
+            const tds = table.querySelectorAll('td');
+            tds.forEach(td => {
+                td.style.padding = '6px';
+                td.style.border = '1px solid #ddd';
+            });
+            
+            container.appendChild(table);
+            
+            // Add total count
+            const totalP = document.createElement('p');
+            totalP.style.marginTop = '15px';
+            totalP.style.fontWeight = 'bold';
+            totalP.style.fontSize = '14px';
+            totalP.textContent = `Total Absent Students: ${absentStudentsData.length}`;
+            container.appendChild(totalP);
+            
+            // Append to body temporarily
+            container.style.position = 'absolute';
+            container.style.left = '-9999px';
+            document.body.appendChild(container);
+            
+            // Use html2canvas to capture the container
+            html2canvas(container, {
+                scale: 2, // Higher quality
+                backgroundColor: '#ffffff',
+                logging: false,
+                allowTaint: false,
+                useCORS: true
+            }).then((canvas) => {
+                // Create download link
+                const link = document.createElement('a');
+                link.download = `absent_students_${document.getElementById('examDate').value}.jpg`;
+                link.href = canvas.toDataURL('image/jpeg', 0.9); // 90% quality
+                link.click();
+                
+                // Remove temporary container
+                document.body.removeChild(container);
+            }).catch(error => {
+                console.error('Error generating JPG:', error);
+                alert('Failed to generate JPG. Please try again.');
+                document.body.removeChild(container);
+            });
+        }
+
+        // Refresh absentees data
+        async function refreshAbsentees() {
+            const refreshBtn = document.querySelector('.refresh-btn');
+            const originalText = refreshBtn.textContent;
+            refreshBtn.textContent = '🔄 Loading...';
+            refreshBtn.disabled = true;
+            
+            await loadAbsenteesData();
+            
+            if (currentView === 'collection') {
+                displayCollectionSheet();
+            } else if (currentView === 'issuance') {
+                displayIssuanceSheet();
+            } else if (currentView === 'report') {
+                displayReportSheet();
+            }
+            
+            refreshBtn.textContent = originalText;
+            refreshBtn.disabled = false;
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Update last updated timestamp
+        function updateLastUpdated(message) {
+            const lastUpdated = document.getElementById('lastUpdated');
+            if (message) {
+                lastUpdated.textContent = message;
+            } else {
+                lastUpdated.textContent = `Loaded: ${new Date().toLocaleString()}`;
+            }
+        }
+
+        // Sample data functions
+        function loadSampleExamDates() {
+            const sampleDates = ['23-Feb-26', '26-Feb-26', '28-Feb-26', '6-Mar-26', '9-Mar-26', '11-Mar-26', '13-Mar-26'];
+            const select = document.getElementById('examDate');
+            select.innerHTML = '<option value="">Select Date</option>';
+            
+            sampleDates.forEach((date, index) => {
+                const option = document.createElement('option');
+                option.value = date;
+                option.textContent = date;
+                if (index === 0) option.selected = true;
+                select.appendChild(option);
+            });
+            
+            setTimeout(() => {
+                loadSampleAbsenteesData();
+                loadSampleSubjectAndTeacherData();
+            }, 100);
+        }
+
+        function loadSampleMappingData() {
+            mappingData = [
+                { room: "D-01", class: "3 CRE", startRoll: "1", endRoll: "18", total: 18, startNum: 1, endNum: 18 },
+                { room: "D-01", class: "3 CRE", startRoll: "1", endRoll: "18", total: 18, startNum: 1, endNum: 18 },
+                { room: "D-01", class: "3 CRE", startRoll: "1", endRoll: "18", total: 18, startNum: 1, endNum: 18 },
+                { room: "D-01", class: "3 INN", startRoll: "1", endRoll: "18", total: 18, startNum: 1, endNum: 18 },
+                { room: "D-02", class: "3 CRE", startRoll: "19", endRoll: "38", total: 20, startNum: 19, endNum: 38 },
+                { room: "D-02", class: "3 EXP", startRoll: "1", endRoll: "18", total: 18, startNum: 1, endNum: 18 },
+                { room: "D-02", class: "4 ORI", startRoll: "1", endRoll: "21", total: 21, startNum: 1, endNum: 21 },
+                { room: "D-02", class: "4 ORI", startRoll: "1", endRoll: "18", total: 18, startNum: 1, endNum: 18 },
+                { room: "D-02", class: "4 ORI", startRoll: "1", endRoll: "15", total: 15, startNum: 1, endNum: 15 },
+                { room: "D-03", class: "3 EXP", startRoll: "19", endRoll: "37", total: 19, startNum: 19, endNum: 37 },
+                { room: "D-03", class: "3 INN", startRoll: "19", endRoll: "37", total: 19, startNum: 19, endNum: 37 },
+                { room: "D-03", class: "4 CRE", startRoll: "1", endRoll: "18", total: 18, startNum: 1, endNum: 18 },
+                { room: "D-03", class: "5 ORI", startRoll: "1", endRoll: "25", total: 25, startNum: 1, endNum: 25 },
+                { room: "D-03", class: "5 ORI", startRoll: "1", endRoll: "23", total: 23, startNum: 1, endNum: 23 },
+                { room: "D-03", class: "5 ORI", startRoll: "1", endRoll: "22", total: 22, startNum: 1, endNum: 22 },
+                { room: "D-04", class: "5 CRE", startRoll: "1", endRoll: "22", total: 22, startNum: 1, endNum: 22 },
+                { room: "D-04", class: "6 ORI", startRoll: "1", endRoll: "28", total: 28, startNum: 1, endNum: 28 },
+                { room: "D-04", class: "6 ORI", startRoll: "1", endRoll: "27", total: 27, startNum: 1, endNum: 27 },
+                { room: "D-04", class: "6 ORI", startRoll: "1", endRoll: "25", total: 25, startNum: 1, endNum: 25 },
+                { room: "D-05", class: "6 CRE", startRoll: "1", endRoll: "25", total: 25, startNum: 1, endNum: 25 },
+                { room: "D-05", class: "7 ORI", startRoll: "1", endRoll: "30", total: 30, startNum: 1, endNum: 30 },
+                { room: "D-05", class: "7 ORI", startRoll: "1", endRoll: "28", total: 28, startNum: 1, endNum: 28 },
+                { room: "D-05", class: "7 ORI", startRoll: "1", endRoll: "26", total: 26, startNum: 1, endNum: 26 },
+                { room: "D-06", class: "7 CRE", startRoll: "1", endRoll: "26", total: 26, startNum: 1, endNum: 26 },
+                { room: "D-06", class: "8 ORI", startRoll: "1", endRoll: "32", total: 32, startNum: 1, endNum: 32 },
+                { room: "D-06", class: "8 ORI", startRoll: "1", endRoll: "30", total: 30, startNum: 1, endNum: 30 },
+                { room: "D-07", class: "8 CRE", startRoll: "1", endRoll: "30", total: 30, startNum: 1, endNum: 30 },
+                { room: "D-11", class: "4 INN", startRoll: "1", endRoll: "20", total: 20, startNum: 1, endNum: 20 },
+                { room: "D-11", class: "4 EXP", startRoll: "1", endRoll: "18", total: 18, startNum: 1, endNum: 18 },
+                { room: "D-11", class: "5 INN", startRoll: "1", endRoll: "25", total: 25, startNum: 1, endNum: 25 },
+                { room: "D-11", class: "5 EXP", startRoll: "1", endRoll: "22", total: 22, startNum: 1, endNum: 22 }
+            ];
+        }
+
+        function loadSampleRooms() {
+            allRooms = [
+                'D-01', 'D-02', 'D-03', 'D-04', 'D-05', 'D-06', 'D-07', 'D-08', 'D-09',
+                'D-10', 'D-11', 'D-12', 'D-13', 'D-14', 'D-15', 'D-16', 'D-17', 'D-18',
+                'D-19', 'D-20', 'D-21', 'D-22', 'D-23', 'D-24', 'D-25', 'D-26', 'D-27',
+                'D-28', 'D-29', 'D-30', 'D-31', 'D-32', 'D-33', 'D-34', 'D-35', 'D-36'
+            ];
+        }
+
+        /* ══════════════════════════════════════════════════════
+           TEACHER PROGRESS REPORT
+        ══════════════════════════════════════════════════════ */
+        // ── Global helpers used by both date-wise and teacher-wise reports ──
+        function parseExamDate(s) {
+            if (!s) return new Date(0);
+            const months = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+            const parts = s.trim().split(/[-\/\s]+/);
+            if (parts.length === 3) {
+                const d = parseInt(parts[0]);
+                const m = months[(parts[1]||'').toLowerCase().slice(0,3)];
+                let   y = parseInt(parts[2]);
+                if (y < 100) y += 2000;
+                if (!isNaN(d) && m !== undefined && !isNaN(y)) return new Date(y, m, d);
+            }
+            return new Date(s);
+        }
+        function sortClasses(arr) {
+            return arr.slice().sort(function(a, b) {
+                const numA = parseInt(a), numB = parseInt(b);
+                if (numA !== numB) return numA - numB;
+                return a.localeCompare(b);
+            });
+        }
+
+        // ── Teacher Report Modal helpers ─────────────────────────────────────
+        var _trAllTeachers = [];   // populated from subjectData/teacherData
+        var _trSelectedTeacher = '';
+
+        function showTeacherReport() {
+            // Show the modal
+            const modal = document.getElementById('trModal');
+            modal.style.display = 'flex';
+            setTimeout(() => document.getElementById('trModalBox').style.transform = 'translateY(0)', 10);
+            // Reset state
+            document.getElementById('trTeacherSearch').style.display = 'none';
+            document.getElementById('trChoiceRow').style.display = 'grid';
+            document.getElementById('trSearchInput').value = '';
+            document.getElementById('trDropdown').innerHTML = '';
+            document.getElementById('trLoadBtn').disabled = true;
+            document.getElementById('trLoadBtn').style.opacity = '.4';
+            _trSelectedTeacher = '';
+        }
+
+        function trSelectMode(mode) {
+            if (mode === 'date') {
+                document.getElementById('trModal').style.display = 'none';
+                _showTeacherReportDateWise();
+            } else {
+                // Show teacher search
+                document.getElementById('trChoiceRow').style.display = 'none';
+                document.getElementById('trTeacherSearch').style.display = 'block';
+                // Build teacher list from teacherData
+                const seen = {};
+                Object.values(teacherData).forEach(dateObj => {
+                    Object.values(dateObj).forEach(arr => {
+                        arr.forEach(cell => {
+                            cell.split(',').forEach(t => {
+                                const v = t.trim();
+                                if (v) seen[v] = true;
+                            });
+                        });
+                    });
+                });
+                _trAllTeachers = Object.keys(seen).sort();
+                trFilterTeachers();
+            }
+        }
+
+        function trFilterTeachers() {
+            const q   = document.getElementById('trSearchInput').value.trim().toLowerCase();
+            const dd  = document.getElementById('trDropdown');
+            const filtered = q
+                ? _trAllTeachers.filter(t => t.toLowerCase().includes(q))
+                : _trAllTeachers;
+            dd.style.display = filtered.length ? 'block' : 'none';
+            dd.innerHTML = filtered.map(t => `
+                <div onmousedown="event.preventDefault();trPickTeacher(this.dataset.name)"
+                    data-name="${t.replace(/\\/g,'\\\\').replace(/"/g,'&quot;')}"
+                    style="padding:9px 14px;cursor:pointer;font-size:.85rem;color:#faf7f2;
+                           border-bottom:1px solid rgba(201,168,76,.08);transition:background .12s;"
+                    onmouseover="this.style.background='rgba(201,168,76,.12)'"
+                    onmouseout="this.style.background='transparent'">
+                    ${t}
+                </div>`).join('');
+        }
+
+        function trPickTeacher(name) {
+            if (!name) return;
+            _trSelectedTeacher = name;
+            const inp = document.getElementById('trSearchInput');
+            inp.value = name;
+            inp.style.borderColor = '#4ade80';
+            document.getElementById('trDropdown').style.display = 'none';
+            const btn = document.getElementById('trLoadBtn');
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.style.background = '#c9a84c';
+            btn.textContent = 'Load Report for: ' + name.split(' ').slice(-2).join(' ');
+        }
+
+        function trLoadTeacherReport() {
+            if (!_trSelectedTeacher) return;
+            document.getElementById('trModal').style.display = 'none';
+            _showTeacherReportTeacherWise(_trSelectedTeacher);
+        }
+
+        var _trCurrentFilter = 'all';
+        function trApplyFilter(filter) {
+            _trCurrentFilter = filter;
+
+            // ── Update button styles ──────────────────────────────────────
+            const tcnt = document.getElementById('teacherReportContent');
+            if (!tcnt) return;
+            tcnt.querySelectorAll('button[data-fkey]').forEach(function(btn){
+                const k = btn.getAttribute('data-fkey');
+                const isActive = (k === filter);
+                btn.style.opacity = isActive ? '1' : '0.6';
+                const bgMap = {all:'rgba(201,168,76,.15)',waiting:'rgba(156,163,175,.12)',checkpending:'rgba(248,113,113,.12)',erppending:'rgba(167,139,250,.12)'};
+                btn.style.background = isActive ? bgMap[k] : 'transparent';
+            });
+
+            // ── Filter rows using stored _trAllRowData array ──────────────
+            if (!_trAllRowData.length) return;
+
+            // Count visible per block
+            const blockCounts = [];
+            const blockMap = new Map();
+
+            _trAllRowData.forEach(function(item){
+                const show = (filter === 'all') || (item.status === filter);
+                item.tr.style.display = show ? '' : 'none';
+
+                // Track per block
+                if (!blockMap.has(item.block)) {
+                    blockMap.set(item.block, {count:0, cntLbl:item.cntLbl});
+                }
+                if (show) blockMap.get(item.block).count++;
+            });
+
+            // Show/hide blocks, update count labels
+            blockMap.forEach(function(val, block){
+                block.style.display = val.count > 0 ? '' : 'none';
+                if (val.cntLbl) val.cntLbl.textContent = val.count + ' subject(s)';
+            });
+        }
+
+        // ── Teacher-wise report ───────────────────────────────────────────────
+        async function _showTeacherReportTeacherWise(teacher) {
+            const container = document.getElementById('teacherReportContainer');
+            const content   = document.getElementById('teacherReportContent');
+            document.getElementById('sheetTitle').textContent = 'Teacher Report — ' + teacher;
+            document.querySelectorAll('.print-container, #missingRoomsList, #summaryStats').forEach(el => el.style.display = 'none');
+            container.style.display = 'block';
+            content.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3)"><div class="spinner" style="margin:0 auto 14px"></div><p>Loading...</p></div>';
+
+            try {
+                // Fetch teacher_progress
+                const resp = await fetch(
+                    `https://sheets.googleapis.com/v4/spreadsheets/${WORKBOOK_B_ID}/values/teacher_progress!A:I?key=${API_KEY}`
+                );
+                const tpData = await resp.json();
+
+                // progressMap[date][cls][SUBJ] = { received, checked, erp }
+                const progressMap = {};
+                if (tpData.values && tpData.values.length > 1) {
+                    for (let i = 1; i < tpData.values.length; i++) {
+                        const r = tpData.values[i];
+                        const t    = (r[0]||'').trim();
+                        const date = (r[1]||'').trim();
+                        const cls  = (r[2]||'').trim();
+                        const subj = (r[3]||'').trim().toUpperCase();
+                        const recv = parseInt(r[5])||0;
+                        const chk  = parseInt(r[6])||0;
+                        const erp  = parseInt(r[7])||0;
+                        if (!date||!cls||!subj) continue;
+                        if (!progressMap[date])       progressMap[date]      = {};
+                        if (!progressMap[date][cls])  progressMap[date][cls] = {};
+                        progressMap[date][cls][subj] = { received:recv, checked:chk, erp, teacher:t };
+                    }
+                }
+
+                // Find all dates where this teacher has assignments in Sheet6
+                const allDates = Object.keys(subjectData).sort(function(a,b){
+                    return parseExamDate(a) - parseExamDate(b);
+                });
+
+                // For each date, find classes where this teacher appears
+                let totalRows = 0;
+                let html = `
+                <div style="margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border);">
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+                        <div style="width:40px;height:40px;border-radius:50%;background:#c9a84c;color:#12100e;
+                             display:flex;align-items:center;justify-content:center;font-weight:700;
+                             font-size:.82rem;flex-shrink:0;">
+                            ${teacher.split(' ').filter(w=>w.length>2).slice(-2).map(w=>w[0]).join('').toUpperCase()||teacher[0]}
+                        </div>
+                        <div>
+                            <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.35rem;
+                                 color:#e8c96e;font-weight:600;">${teacher}</div>
+                            <div style="font-size:.7rem;color:var(--text3);letter-spacing:1.5px;
+                                 text-transform:uppercase;">Teacher-wise Script Progress · All Dates</div>
+                        </div>
+                    </div>
+                </div>`;
+
+                allDates.forEach(date => {
+                    const classMap = subjectData[date] || {};
+                    const classes  = sortClasses(Object.keys(classMap));
+                    const tableRows = [];
+
+                    classes.forEach(cls => {
+                        const subjRaw = classMap[cls] || [];
+                        let subjects = [];
+                        subjRaw.forEach(s => s.split(',').forEach(p => { const v=p.trim(); if(v) subjects.push(v); }));
+
+                        const tRaw = (teacherData[date] && teacherData[date][cls]) || [];
+                        let teachers = [];
+                        tRaw.forEach(t => t.split(',').forEach(p => { const v=p.trim(); if(v) teachers.push(v); }));
+
+                        subjects.forEach((subj, si) => {
+                            const tName = teachers[si] || teachers[0] || '';
+                            // Only include rows for this teacher
+                            if (tName.trim().toUpperCase() !== teacher.trim().toUpperCase()) return;
+
+                            const key  = subj.toUpperCase();
+                            const prog = (progressMap[date] && progressMap[date][cls] && progressMap[date][cls][key]) || null;
+
+                            let received='—', checked='—', erpDone='—', checkPendCell='—', erpPendCell='—';
+                            if (!prog) {
+                                received = '<span style="color:var(--text3);font-style:italic;font-size:.75rem;">Waiting for response</span>';
+                                checked = erpDone = checkPendCell = erpPendCell = '<span style="color:var(--text3);">—</span>';
+                            } else {
+                                const recv=prog.received, chk=prog.checked, erp=prog.erp;
+                                const cp=Math.max(0,recv-chk), ep=Math.max(0,recv-erp);
+
+                                if (recv === 0) {
+                                    // Submitted with 0 received — data not filled, warn
+                                    received      = `<span style="color:#f87171;font-weight:700;">0 ⚠</span>`;
+                                    checked       = `<span style="color:var(--text3);">—</span>`;
+                                    erpDone       = `<span style="color:var(--text3);">—</span>`;
+                                    checkPendCell = `<span style="color:#f87171;font-size:.72rem;font-weight:600;">Not filled</span>`;
+                                    erpPendCell   = `<span style="color:#f87171;font-size:.72rem;font-weight:600;">Not filled</span>`;
+                                } else {
+                                    received  = `<span style="color:#faf7f2;font-weight:600;">${recv}</span>`;
+                                    checked   = chk>=recv
+                                        ? `<span style="color:#4ade80;font-size:1.1rem;font-weight:700;">✓</span><br><span style="font-size:.7rem;color:#4ade80;">${chk}</span>`
+                                        : `<span style="color:#fbbf24;font-weight:700;">${chk}</span>`;
+                                    erpDone   = erp>=recv
+                                        ? `<span style="color:#4ade80;font-size:1.1rem;font-weight:700;">✓</span><br><span style="font-size:.7rem;color:#4ade80;">${erp}</span>`
+                                        : `<span style="color:#a78bfa;font-weight:700;">${erp}</span>`;
+                                    checkPendCell = cp===0
+                                        ? `<span style="color:#4ade80;font-size:1.1rem;font-weight:700;">✗</span>`
+                                        : `<span style="background:rgba(248,113,113,.18);color:#f87171;font-weight:700;padding:2px 10px;border-radius:99px;font-size:.8rem;">${cp}</span>`;
+                                    erpPendCell = ep===0
+                                        ? `<span style="color:#4ade80;font-size:1.1rem;font-weight:700;">✗</span>`
+                                        : `<span style="background:rgba(167,139,250,.18);color:#a78bfa;font-weight:700;padding:2px 10px;border-radius:99px;font-size:.8rem;">${ep}</span>`;
+                                }
+                            }
+                            tableRows.push({ cls, subj, received, checked, erpDone, checkPendCell, erpPendCell, teacher: prog ? (prog.teacher||'—') : '—', status: !prog ? 'waiting' : (prog.received===0 ? 'waiting' : (Math.max(0,prog.received-prog.checked)>0 ? 'checkpending' : (Math.max(0,prog.received-prog.erp)>0 ? 'erppending' : 'done'))) });
+                        });
+                    });
+
+                    if (!tableRows.length) return;
+                    totalRows += tableRows.length;
+
+                    html += `
+                    <div style="margin-bottom:22px;" class="tr-date-block" data-date="${date}">
+                        <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;
+                             background:var(--ink2,#1c1917);border:1px solid var(--border,rgba(201,168,76,.2));
+                             border-radius:10px 10px 0 0;border-bottom:none;">
+                            <div style="width:3px;height:16px;background:#c9a84c;border-radius:2px;flex-shrink:0;"></div>
+                            <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.05rem;
+                                 color:#e8c96e;font-weight:600;">${date}</span>
+                            <span style="font-size:.63rem;color:var(--text3);letter-spacing:1px;
+                                 text-transform:uppercase;margin-left:4px;" class="tr-row-count">${tableRows.length} subject(s)</span>
+                        </div>
+                        <table style="width:100%;border-collapse:collapse;font-size:.82rem;
+                               border:1px solid var(--border,rgba(201,168,76,.2));border-top:none;
+                               border-radius:0 0 10px 10px;overflow:hidden;">
+                            <thead>
+                                <tr style="background:var(--ink3,#292524);">
+                                    <th style="padding:8px 13px;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#c9a84c;text-align:left;border-bottom:1px solid var(--border);">Class</th>
+                                    <th style="padding:8px 13px;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#faf7f2;text-align:left;border-bottom:1px solid var(--border);">Subject</th>
+                                    <th style="padding:8px 13px;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#e8c96e;text-align:left;border-bottom:1px solid var(--border);">Teacher</th>
+                                    <th style="padding:8px 13px;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);text-align:center;border-bottom:1px solid var(--border);">Received</th>
+                                    <th style="padding:8px 13px;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#2dd4bf;text-align:center;border-bottom:1px solid var(--border);">Checked</th>
+                                    <th style="padding:8px 13px;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#a78bfa;text-align:center;border-bottom:1px solid var(--border);">ERP Done</th>
+                                    <th style="padding:8px 13px;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#f87171;text-align:center;border-bottom:1px solid var(--border);">Check Pending</th>
+                                    <th style="padding:8px 13px;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#c084fc;text-align:center;border-bottom:1px solid var(--border);">ERP Pending</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${tableRows.map(function(r,ri){
+                                    return '<tr data-status="'+r.status+'" style="background:'+(ri%2===0?'transparent':'rgba(201,168,76,.03)')+';border-bottom:1px solid var(--border2,rgba(201,168,76,.08));">'
+                                    +'<td style="padding:9px 13px;font-family:\'Cormorant Garamond\',Georgia,serif;font-size:.95rem;color:#e8c96e;font-weight:600;">'+r.cls+'</td>'
+                                    +'<td style="padding:9px 13px;color:#faf7f2;font-weight:500;">'+r.subj+'</td>'
+                                    +'<td style="padding:9px 13px;color:#c9a84c;font-size:.8rem;">'+r.teacher+'</td>'
+                                    +'<td style="padding:9px 13px;text-align:center;">'+r.received+'</td>'
+                                    +'<td style="padding:9px 13px;text-align:center;">'+r.checked+'</td>'
+                                    +'<td style="padding:9px 13px;text-align:center;">'+r.erpDone+'</td>'
+                                    +'<td style="padding:9px 13px;text-align:center;">'+r.checkPendCell+'</td>'
+                                    +'<td style="padding:9px 13px;text-align:center;">'+r.erpPendCell+'</td>'
+                                    +'</tr>';
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>`;
+                });
+
+                if (!totalRows) {
+                    html += `<div style="padding:40px;text-align:center;color:var(--text3);font-size:.88rem;">
+                        No assignments found for <strong style="color:#e8c96e;">${teacher}</strong> in Sheet6.</div>`;
+                }
+                content.innerHTML = html;
+
+            } catch(e) {
+                content.innerHTML = `<div style="padding:40px;text-align:center;color:#f87171;font-size:.88rem;">Failed: ${e.message}</div>`;
+            }
+        }
+
+        // ── Date-wise report ──────────────────────────────────────────
+        var _trAllRowData = [];
+
+        async function _showTeacherReportDateWise() {
+            const container = document.getElementById('teacherReportContainer');
+            const cnt       = document.getElementById('teacherReportContent');
+            document.getElementById('sheetTitle').textContent = 'Script Progress Report';
+            document.querySelectorAll('.print-container, #missingRoomsList, #summaryStats').forEach(el => el.style.display = 'none');
+            container.style.display = 'block';
+            cnt.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3)"><div class="spinner" style="margin:0 auto 14px"></div><p>Loading...</p></div>';
+            _trAllRowData = [];
+
+            try {
+                const resp = await fetch(
+                    'https://sheets.googleapis.com/v4/spreadsheets/' + WORKBOOK_B_ID + '/values/teacher_progress!A:I?key=' + API_KEY
+                );
+                const tpData = await resp.json();
+                const progressMap = {};
+                if (tpData.values && tpData.values.length > 1) {
+                    for (let i = 1; i < tpData.values.length; i++) {
+                        const r = tpData.values[i];
+                        const t=r[0]?r[0].trim():'', date=r[1]?r[1].trim():'', cls=r[2]?r[2].trim():'', subj=r[3]?r[3].trim().toUpperCase():'';
+                        const recv=parseInt(r[5])||0, chk=parseInt(r[6])||0, erp=parseInt(r[7])||0;
+                        if (!date||!cls||!subj) continue;
+                        if (!progressMap[date]) progressMap[date]={};
+                        if (!progressMap[date][cls]) progressMap[date][cls]={};
+                        progressMap[date][cls][subj]={received:recv,checked:chk,erp:erp,teacher:t};
+                    }
+                }
+
+                const allDates = Object.keys(subjectData).sort((a,b)=>parseExamDate(a)-parseExamDate(b));
+                if (!allDates.length) {
+                    cnt.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3)">No exam dates found.</div>';
+                    return;
+                }
+
+                cnt.innerHTML = '';
+
+                // ── Header + filter buttons (real DOM, not innerHTML) ──
+                const hdr = document.createElement('div');
+                hdr.style.cssText = 'margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border);';
+                const title = document.createElement('div');
+                title.style.cssText = 'font-family:var(--font-d);font-size:1.35rem;color:var(--gold2);font-weight:600;margin-bottom:4px;';
+                title.textContent = 'Script Checking & ERP Progress';
+                const sub = document.createElement('div');
+                sub.style.cssText = 'font-size:.7rem;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;';
+                sub.textContent = 'Date-wise · All Classes · All Subjects';
+                const btnRow = document.createElement('div');
+                btnRow.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;';
+
+                const BTNS = [
+                    {key:'all',          label:'All',              color:'#e8c96e',border:'rgba(201,168,76,.4)', activeBg:'rgba(201,168,76,.15)'},
+                    {key:'waiting',      label:'⏳ Not Submitted', color:'#d1d5db',border:'rgba(156,163,175,.4)',activeBg:'rgba(156,163,175,.12)'},
+                    {key:'checkpending', label:'✗ Check Pending',  color:'#f87171',border:'rgba(248,113,113,.4)',activeBg:'rgba(248,113,113,.12)'},
+                    {key:'erppending',   label:'✗ ERP Pending',    color:'#a78bfa',border:'rgba(167,139,250,.4)',activeBg:'rgba(167,139,250,.12)'}
+                ];
+                BTNS.forEach(function(cfg){
+                    const btn = document.createElement('button');
+                    btn.setAttribute('data-fkey', cfg.key);
+                    btn.textContent = cfg.label;
+                    btn.style.cssText = 'padding:6px 14px;border-radius:99px;border:1.5px solid '
+                        + (cfg.key==='all'?cfg.border:cfg.border.replace('.4','.3'))
+                        + ';background:'+(cfg.key==='all'?cfg.activeBg:'transparent')
+                        + ';color:'+cfg.color+';font-size:.75rem;font-weight:700;cursor:pointer;'
+                        + 'letter-spacing:.5px;transition:all .18s;opacity:'+(cfg.key==='all'?'1':'0.6')+';';
+                    btn.onclick = function(){ trApplyFilter(cfg.key); };
+                    btnRow.appendChild(btn);
+                });
+
+                hdr.appendChild(title);
+                hdr.appendChild(sub);
+                hdr.appendChild(btnRow);
+                cnt.appendChild(hdr);
+
+                // ── Build date blocks with real DOM elements ──
+                allDates.forEach(function(date){
+                    const classMap = subjectData[date]||{};
+                    const classes  = sortClasses(Object.keys(classMap));
+                    if (!classes.length) return;
+
+                    const block = document.createElement('div');
+                    block.style.cssText = 'margin-bottom:22px;';
+
+                    const bar = document.createElement('div');
+                    bar.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--ink2,#1c1917);border:1px solid var(--border,rgba(201,168,76,.2));border-radius:10px 10px 0 0;border-bottom:none;';
+                    const pip = document.createElement('div');
+                    pip.style.cssText = 'width:3px;height:16px;background:#c9a84c;border-radius:2px;flex-shrink:0;';
+                    const dateLbl = document.createElement('span');
+                    dateLbl.style.cssText = "font-family:'Cormorant Garamond',Georgia,serif;font-size:1.05rem;color:#e8c96e;font-weight:600;";
+                    dateLbl.textContent = date;
+                    const cntLbl = document.createElement('span');
+                    cntLbl.style.cssText = 'font-size:.63rem;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-left:4px;';
+                    bar.appendChild(pip); bar.appendChild(dateLbl); bar.appendChild(cntLbl);
+                    block.appendChild(bar);
+
+                    const table = document.createElement('table');
+                    table.style.cssText = 'width:100%;border-collapse:collapse;font-size:.82rem;border:1px solid var(--border,rgba(201,168,76,.2));border-top:none;border-radius:0 0 10px 10px;overflow:hidden;';
+                    const thead = document.createElement('thead');
+                    thead.innerHTML = '<tr style="background:var(--ink3,#292524);">'
+                        +'<th style="padding:8px 13px;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#c9a84c;text-align:left;border-bottom:1px solid var(--border);">Class</th>'
+                        +'<th style="padding:8px 13px;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#faf7f2;text-align:left;border-bottom:1px solid var(--border);">Subject</th>'
+                        +'<th style="padding:8px 13px;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#e8c96e;text-align:left;border-bottom:1px solid var(--border);">Teacher</th>'
+                        +'<th style="padding:8px 13px;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);text-align:center;border-bottom:1px solid var(--border);">Received</th>'
+                        +'<th style="padding:8px 13px;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#2dd4bf;text-align:center;border-bottom:1px solid var(--border);">Checked</th>'
+                        +'<th style="padding:8px 13px;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#a78bfa;text-align:center;border-bottom:1px solid var(--border);">ERP Done</th>'
+                        +'<th style="padding:8px 13px;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#f87171;text-align:center;border-bottom:1px solid var(--border);">Check Pending</th>'
+                        +'<th style="padding:8px 13px;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#c084fc;text-align:center;border-bottom:1px solid var(--border);">ERP Pending</th>'
+                        +'</tr>';
+                    table.appendChild(thead);
+
+                    const tbody = document.createElement('tbody');
+                    let rowCount = 0;
+
+                    classes.forEach(function(cls){
+                        let subjects=[];
+                        (classMap[cls]||[]).forEach(function(s){ s.split(',').forEach(function(p){ const v=p.trim(); if(v) subjects.push(v); }); });
+                        let teachers=[];
+                        ((teacherData[date]&&teacherData[date][cls])||[]).forEach(function(t){ t.split(',').forEach(function(p){ const v=p.trim(); if(v) teachers.push(v); }); });
+
+                        subjects.forEach(function(subj, si){
+                            const tName = teachers[si]||teachers[0]||'—';
+                            const key   = subj.toUpperCase();
+                            const prog  = (progressMap[date]&&progressMap[date][cls]&&progressMap[date][cls][key])||null;
+
+                            let status;
+                            if (!prog) { status='waiting'; }
+                            else if (prog.received===0) { status='waiting'; }
+                            else if (Math.max(0,prog.received-prog.checked)>0) { status='checkpending'; }
+                            else if (Math.max(0,prog.received-prog.erp)>0) { status='erppending'; }
+                            else { status='done'; }
+
+                            let recvH,chkH,erpH,cpH,epH;
+                            if (!prog) {
+                                recvH='<span style="color:var(--text3);font-style:italic;font-size:.75rem;">Waiting for response</span>';
+                                chkH=erpH=cpH=epH='<span style="color:var(--text3);">—</span>';
+                            } else if (prog.received===0) {
+                                recvH='<span style="color:#f87171;font-weight:700;">0 ⚠</span>';
+                                chkH='<span style="color:var(--text3);">—</span>';
+                                erpH='<span style="color:var(--text3);">—</span>';
+                                cpH='<span style="color:#f87171;font-size:.72rem;font-weight:600;">Not filled</span>';
+                                epH='<span style="color:#f87171;font-size:.72rem;font-weight:600;">Not filled</span>';
+                            } else {
+                                const recv=prog.received,chk=prog.checked,erp=prog.erp;
+                                const cp=Math.max(0,recv-chk),ep=Math.max(0,recv-erp);
+                                recvH='<span style="color:#faf7f2;font-weight:600;">'+recv+'</span>';
+                                chkH=chk>=recv?'<span style="color:#4ade80;font-size:1.1rem;font-weight:700;">✓</span><br><span style="font-size:.7rem;color:#4ade80;">'+chk+'</span>':'<span style="color:#fbbf24;font-weight:700;">'+chk+'</span>';
+                                erpH=erp>=recv?'<span style="color:#4ade80;font-size:1.1rem;font-weight:700;">✓</span><br><span style="font-size:.7rem;color:#4ade80;">'+erp+'</span>':'<span style="color:#a78bfa;font-weight:700;">'+erp+'</span>';
+                                cpH=cp===0?'<span style="color:#4ade80;font-size:1.1rem;font-weight:700;">✗</span>':'<span style="background:rgba(248,113,113,.18);color:#f87171;font-weight:700;padding:2px 10px;border-radius:99px;font-size:.8rem;">'+cp+'</span>';
+                                epH=ep===0?'<span style="color:#4ade80;font-size:1.1rem;font-weight:700;">✗</span>':'<span style="background:rgba(167,139,250,.18);color:#a78bfa;font-weight:700;padding:2px 10px;border-radius:99px;font-size:.8rem;">'+ep+'</span>';
+                            }
+
+                            const tr = document.createElement('tr');
+                            tr.setAttribute('data-status', status);
+                            tr.style.cssText = 'background:'+(rowCount%2===0?'transparent':'rgba(201,168,76,.03)')+';border-bottom:1px solid rgba(201,168,76,.08);';
+                            tr.innerHTML = '<td style="padding:9px 13px;font-family:\'Cormorant Garamond\',Georgia,serif;font-size:.95rem;color:#e8c96e;font-weight:600;">'+cls+'</td>'
+                                +'<td style="padding:9px 13px;color:#faf7f2;font-weight:500;">'+subj+'</td>'
+                                +'<td style="padding:9px 13px;color:#c9a84c;font-size:.8rem;">'+tName+'</td>'
+                                +'<td style="padding:9px 13px;text-align:center;">'+recvH+'</td>'
+                                +'<td style="padding:9px 13px;text-align:center;">'+chkH+'</td>'
+                                +'<td style="padding:9px 13px;text-align:center;">'+erpH+'</td>'
+                                +'<td style="padding:9px 13px;text-align:center;">'+cpH+'</td>'
+                                +'<td style="padding:9px 13px;text-align:center;">'+epH+'</td>';
+
+                            tbody.appendChild(tr);
+                            _trAllRowData.push({status:status, tr:tr, block:block, cntLbl:cntLbl});
+                            rowCount++;
+                        });
+                    });
+
+                    cntLbl.textContent = rowCount + ' subject(s)';
+                    table.appendChild(tbody);
+                    block.appendChild(table);
+                    cnt.appendChild(block);
+                });
+
+            } catch(e) {
+                cnt.innerHTML = '<div style="padding:40px;text-align:center;color:#f87171;font-size:.88rem;">Failed to load: '+e.message+'</div>';
+            }
+        }
+
+    </script>
+</body>
+</html>
