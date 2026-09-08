@@ -411,29 +411,50 @@
         .print-hdr { display:none; }
         @media print {
             @page { size:A4 portrait; margin:.6cm; }
-            body { background:white; }
+            body { background:white; color:black; }
             .school-header,.header-divider,.container>.control-panel,.container>.stats-bar,.container>.legend,.sidebar,.ld-wrap,#tc,.teacher-panel,.tp-login-overlay { display:none!important; }
+
+            .container { padding: 0; max-width: 100%; }
+            .main { display:block; }
+            .seating-area { padding:0; width:100%; }
+
             .print-hdr { display:flex!important; align-items:center; gap:14px; padding-bottom:10px; border-bottom:2px solid #222; margin-bottom:12px; }
             .print-hdr img { width:50px; height:50px; object-fit:contain; }
             .print-hdr h1 { font-family:var(--font-d); font-size:1.25rem; color:#000; margin:0; }
             .print-hdr p { font-size:.74rem; color:#555; margin:2px 0 0; }
             .print-hdr .pm { font-size:.8rem; color:#000; font-weight:700; margin-top:4px; }
-            .main { display:block; } .seating-area { padding:0; } .area-hdr { display:none; }
-            #seatingPlan table { border-spacing:3px!important; width:100%!important; table-layout:fixed; }
-            #seatingPlan table td { width:auto!important; height:auto!important; min-height:55px; padding:3px 2px!important; font-size:6.5px!important; border-radius:3px!important; border:1px solid #ccc!important; box-shadow:none!important; }
+
+            .area-hdr { display:none; }
+
+            #seatingPlan { overflow:visible; }
+            #seatingPlan table { border-spacing:4px!important; width:100%!important; table-layout:fixed; border-collapse:separate; }
+            #seatingPlan table td { 
+                width:auto!important; height:auto!important; min-height:60px; padding:6px 4px!important; 
+                font-size:9px!important; border-radius:4px!important; border:1px solid #999!important; 
+                box-shadow:none!important; background:white!important; color:black!important;
+                text-align:center; vertical-align:middle; line-height:1.4;
+            }
             #seatingPlan table td::before { display:none!important; }
-            #seatingPlan table td.present { background:#e6f5f3!important; border-color:#a7d9d4!important; }
-            #seatingPlan table td.absent  { background:#fdecea!important; border-color:#f5b8b3!important; }
-            #seatingPlan table td.noexam  { background:#f5f0e8!important; border-color:#d0c8be!important; opacity:1!important; }
-            .c-roll { font-size:.82rem!important; color:#000!important; } .c-name { font-size:5.5px!important; color:#333!important; }
-            .c-class { font-size:5.5px!important; color:#666!important; } .c-chip { font-size:5px!important; padding:1px 4px!important; background:#eee!important; color:#444!important; }
+            #seatingPlan table td.present { background:#d1fae5!important; border-color:#059669!important; }
+            #seatingPlan table td.absent  { background:#fee2e2!important; border-color:#dc2626!important; }
+            #seatingPlan table td.noexam  { background:#f5f0e8!important; border-color:#c9bfb0!important; opacity:1!important; }
+
+            .c-roll { font-size:11px!important; color:#000!important; font-weight:700!important; display:block; line-height:1.2; margin-bottom:2px; }
+            .c-name { font-size:8px!important; color:#333!important; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:95%; margin:0 auto 1px; font-weight:600; }
+            .c-class { font-size:7px!important; color:#666!important; display:block; margin-bottom:3px; }
+            .c-chip { font-size:7px!important; padding:2px 6px!important; background:#f0f0f0!important; color:#333!important; border-radius:99px; display:inline-flex; align-items:center; gap:2px; font-weight:600; letter-spacing:.3px; }
             .c-dot { display:none!important; }
-            .summary-sect { margin-top:10px; border:1.5px solid #aaa; border-radius:4px; page-break-inside:avoid; }
-            .sect-hd { background:#e8ecf4!important; color:#000!important; padding:6px 12px; border-bottom:1px solid #bbb; }
-            .sum-tbl th { background:#f2f4f8!important; color:#000!important; font-size:.61rem; padding:5px 10px; border-bottom:1px solid #ccc; }
-            .sum-tbl tbody td { color:#000!important; background:white!important; font-size:.71rem; padding:4px 10px; border-bottom:1px solid #ddd; }
-            .sum-tbl tbody tr:last-child td { background:#f2f4f8!important; border-top:1px solid #bbb!important; }
-            .td-g { color:#0f5946!important; } .td-r { color:#991b1b!important; }
+            .empty-td { color:#ccc!important; font-size:10px!important; }
+
+            .summary-sect { margin-top:12px; border:1.5px solid #aaa; border-radius:4px; page-break-inside:avoid; background:white!important; }
+            .sect-hd { background:#e8ecf4!important; color:#000!important; padding:8px 14px; border-bottom:1px solid #bbb; font-size:10px; font-weight:700; letter-spacing:1.5px; }
+            .sum-tbl { width:100%; border-collapse:collapse; }
+            .sum-tbl th { background:#f2f4f8!important; color:#000!important; font-size:9px; padding:6px 10px; border-bottom:1px solid #ccc; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+            .sum-tbl tbody td { color:#000!important; background:white!important; font-size:9px; padding:5px 10px; border-bottom:1px solid #ddd; text-align:center; }
+            .sum-tbl tbody td:first-child { text-align:left; font-weight:700; }
+            .sum-tbl tbody tr:last-child td { background:#f2f4f8!important; border-top:1px solid #bbb!important; font-weight:700; }
+            .td-g { color:#059669!important; font-weight:700!important; }
+            .td-r { color:#dc2626!important; font-weight:700!important; }
         }
 
         /* ══ MOBILE ══ */
@@ -673,6 +694,7 @@
         .tp-submit-btn:hover:not(:disabled) { background:var(--gold2); transform:translateY(-1px); box-shadow:0 4px 16px rgba(201,168,76,.45); }
         .tp-submit-btn:disabled { opacity:.4; cursor:not-allowed; transform:none; }
     </style>
+<base target="_blank">
 </head>
 <body>
 <div id="tc"></div>
@@ -846,23 +868,13 @@
                 </div>
                 <div>
                     <div class="tp-login-title">Teacher Login</div>
-                    <div class="tp-login-sub">Search and select your name to access your script tracking panel</div>
+                    <div class="tp-login-sub">Select your name to access your script tracking panel</div>
                 </div>
             </div>
             <div class="tp-login-body">
                 <div class="tp-login-field">
                     <label>Your Name</label>
-                    <div style="position: relative;">
-                        <input type="text" 
-                               id="tpLoginSearch" 
-                               placeholder="Type to search teacher name..." 
-                               autocomplete="off"
-                               style="width:100%; padding:11px 14px; border:1px solid rgba(201,168,76,.3); border-radius:8px; font-size:.9rem; font-weight:500; font-family:var(--font); color:var(--ivory); background:var(--ink2); outline:none; transition:border-color .2s, box-shadow .2s; margin-bottom:5px;">
-                        <div id="tpSearchResults" 
-                             style="position:absolute; top:100%; left:0; right:0; max-height:250px; overflow-y:auto; background:var(--ink3); border:1px solid var(--border); border-radius:8px; z-index:1000; display:none; box-shadow:0 10px 30px rgba(0,0,0,.5);">
-                        </div>
-                    </div>
-                    <select id="tpLoginSelect" style="display:none;">
+                    <select id="tpLoginSelect">
                         <option value="">— Loading teachers... —</option>
                     </select>
                 </div>
@@ -991,7 +1003,8 @@ function onConfirm(){
   var orig=subBtn.innerHTML;subBtn.disabled=true;subBtn.textContent="Submitting...";
   fetch(APPS_SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify({sheetName:sn,values:vals})}).then(function(){doLock(true);renderAtt(true);
   subBtn.textContent="✓ Submitted";subBtn.style.background="var(--green)";subBtn.style.borderColor="var(--green)";
-  toast("success","Submitted Successfully!","Room "+curRoom+" attendance locked.",5000);}).catch(function(e){toast("error","Failed",e.message);subBtn.innerHTML=orig;subBtn.disabled=false;});}
+  toast("success","Submitted Successfully!","Room "+curRoom+" attendance locked.",5000);}).catch(function(e){toast("error","Failed",e.message);subBtn.innerHTML=orig;subBtn.disabled=false;});
+}
 confirmBtn.addEventListener("click",onConfirm);
 cancelBtn.addEventListener("click",onCancel);
 /* Close on backdrop click */
@@ -1007,7 +1020,7 @@ window.addEventListener("load",function(){loadRooms().then(loadDates).then(cache
 }());
 
 /* ══════════════════════════════════════════
-   TEACHER PANEL JS - with Searchable Dropdown
+   TEACHER PANEL JS
 ══════════════════════════════════════════ */
 (function(){
 "use strict";
@@ -1017,8 +1030,6 @@ var LS_KEY        = "bvm_teacher_name";
 
 /* DOM refs */
 var loginOverlay  = document.getElementById("tpLoginOverlay");
-var loginSearch   = document.getElementById("tpLoginSearch");
-var searchResults = document.getElementById("tpSearchResults");
 var loginSelect   = document.getElementById("tpLoginSelect");
 var loginBtn      = document.getElementById("tpLoginBtn");
 var tpPill        = document.getElementById("tpTeacherPill");
@@ -1039,7 +1050,6 @@ var _APS = "https://script.google.com/macros/s/AKfycbwrGctMFWczVm3sgRY-T07OuAR9a
 
 var currentTeacher = "";
 var sheet6Raw = null, sheet4Raw = null, sheet2Raw = null, sheet3Raw = null;
-var teacherList = []; // Store all teacher names for search
 
 /* ── helpers ── */
 function tpFetch(url){ return fetch(url).then(function(r){return r.json();}); }
@@ -1091,13 +1101,11 @@ function tpPopulateDates(){
   }
 }
 
-/* ── populate teacher list for search (all unique teachers from Sheet6 cols 11+) ── */
-function tpPopulateTeacherList(){
+/* ── populate login select (all unique teachers from Sheet6 cols 11+) ── */
+function tpPopulateLoginSelect(){
   if(!sheet6Raw||!sheet6Raw.values) return;
   var rows = sheet6Raw.values, hdr = rows[0]||[];
   var seen = {};
-  teacherList = [];
-  
   for(var r=1; r<rows.length; r++){
     var row = rows[r];
     for(var c=11; c<hdr.length; c++){
@@ -1106,102 +1114,26 @@ function tpPopulateTeacherList(){
       // Split comma-separated teacher names in one cell
       cellVal.split(",").forEach(function(t){
         var name = t.trim();
-        if(name && !seen[name]) {
-          seen[name] = true;
-          teacherList.push(name);
-        }
+        if(name) seen[name] = true;
       });
     }
   }
-  
-  teacherList.sort();
-  
-  // Also populate hidden select for backward compatibility
   loginSelect.innerHTML = '<option value="">— Select your name —</option>';
-  teacherList.forEach(function(t){
+  Object.keys(seen).sort().forEach(function(t){
     var o = document.createElement("option");
     o.value = t; o.textContent = t;
     loginSelect.appendChild(o);
   });
   loginSelect.disabled = false;
-  
-  // Clear search field
-  if(loginSearch) loginSearch.value = "";
-  hideSearchResults();
 }
-
-/* ── Search functionality ── */
-function filterTeachers(searchTerm) {
-  if(!searchTerm || searchTerm.trim() === "") {
-    return teacherList;
-  }
-  var term = searchTerm.toLowerCase().trim();
-  return teacherList.filter(function(name) {
-    return name.toLowerCase().includes(term);
-  });
-}
-
-function showSearchResults() {
-  if(searchResults) {
-    searchResults.style.display = "block";
-  }
-}
-
-function hideSearchResults() {
-  if(searchResults) {
-    searchResults.style.display = "none";
-  }
-}
-
-function renderSearchResults(filteredList) {
-  if(!searchResults) return;
-  
-  if(!filteredList || filteredList.length === 0) {
-    searchResults.innerHTML = '<div style="padding:12px; text-align:center; color:var(--text3);">No matching teachers found</div>';
-    showSearchResults();
-    return;
-  }
-  
-  var html = '';
-  filteredList.forEach(function(name) {
-    html += '<div class="search-result-item" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid var(--border2); transition:background .15s; color:var(--ivory);" onclick="selectTeacherFromSearch(\'' + name.replace(/'/g, "\\'") + '\')" onmouseover="this.style.background=\'rgba(201,168,76,.1)\'" onmouseout="this.style.background=\'transparent\'">' + name + '</div>';
-  });
-  
-  searchResults.innerHTML = html;
-  showSearchResults();
-}
-
-// Make function globally available for onclick handler
-window.selectTeacherFromSearch = function(name) {
-  if(loginSearch) {
-    loginSearch.value = name;
-    // Also set the hidden select value
-    for(var i=0; i<loginSelect.options.length; i++) {
-      if(loginSelect.options[i].value === name) {
-        loginSelect.selectedIndex = i;
-        break;
-      }
-    }
-    loginBtn.disabled = false;
-    hideSearchResults();
-  }
-};
 
 /* ── login flow ── */
 function showLogin(){
   loginOverlay.classList.add("show");
-  // Focus on search field
-  setTimeout(function() {
-    if(loginSearch) {
-      loginSearch.focus();
-    }
-  }, 300);
 }
-
 function hideLogin(){
   loginOverlay.classList.remove("show");
 }
-
 function setTeacher(name){
   currentTeacher = name;
   try{ localStorage.setItem(LS_KEY, name); }catch(e){}
@@ -1212,67 +1144,13 @@ function setTeacher(name){
   tpToast("success", "Welcome, "+name.split(" ")[0]+"!", "Select an exam date and load your classes.");
 }
 
-// Search input handler
-if(loginSearch) {
-  loginSearch.addEventListener("input", function(e) {
-    var searchTerm = e.target.value;
-    var filtered = filterTeachers(searchTerm);
-    renderSearchResults(filtered);
-    
-    // Disable login button if no exact match
-    var exactMatch = filtered.length === 1 && filtered[0].toLowerCase() === searchTerm.toLowerCase().trim();
-    loginBtn.disabled = !exactMatch;
-    
-    // If no results or empty search, show all teachers when search is cleared
-    if(searchTerm.trim() === "") {
-      renderSearchResults(teacherList);
-      loginBtn.disabled = true;
-    }
-  });
-  
-  loginSearch.addEventListener("focus", function() {
-    if(teacherList.length > 0) {
-      renderSearchResults(teacherList);
-    }
-  });
-  
-  // Close search results when clicking outside
-  document.addEventListener("click", function(e) {
-    if(loginSearch && searchResults && 
-       !loginSearch.contains(e.target) && 
-       !searchResults.contains(e.target)) {
-      hideSearchResults();
-    }
-  });
-  
-  // Handle keyboard navigation
-  loginSearch.addEventListener("keydown", function(e) {
-    if(e.key === "Escape") {
-      hideSearchResults();
-    } else if(e.key === "Enter") {
-      var filtered = filterTeachers(loginSearch.value);
-      if(filtered.length === 1) {
-        selectTeacherFromSearch(filtered[0]);
-        e.preventDefault();
-      }
-    }
-  });
-}
-
-loginBtn.addEventListener("click", function(){
-  if(loginSearch && loginSearch.value) {
-    var filtered = filterTeachers(loginSearch.value);
-    if(filtered.length === 1) {
-      setTeacher(filtered[0]);
-    } else if(filtered.length > 1) {
-      tpToast("warning", "Multiple matches", "Please select a specific name from the list.");
-    } else {
-      tpToast("error", "No match", "Teacher name not found.");
-    }
-  }
+loginSelect.addEventListener("change", function(){
+  loginBtn.disabled = !loginSelect.value;
 });
-
-/* ── Switch handled by tpDoSwitch() ── */
+loginBtn.addEventListener("click", function(){
+  if(loginSelect.value) setTeacher(loginSelect.value);
+});
+/* Switch handled by tpDoSwitch() */
 
 /* ── system total from Sheet4 / Sheet3 ── */
 function tpGetSysTotal(className, subject, date){
@@ -1552,17 +1430,18 @@ window.tpTogglePanel = function(){
       // Load sheets first so teacher list is ready
       tpLoadSheets().then(function(){
         tpPopulateDates();
-        tpPopulateTeacherList(); // This now populates search list
+        tpPopulateLoginSelect();
         // Check localStorage
         var saved = "";
         try{ saved = localStorage.getItem(LS_KEY)||""; }catch(e){}
         if(saved){
-          // Check if saved teacher exists in list
-          if(teacherList.includes(saved)) {
-            loginSearch.value = saved;
-            loginBtn.disabled = false;
-            setTeacher(saved);
-            return;
+          for(var i=0; i<loginSelect.options.length; i++){
+            if(loginSelect.options[i].value===saved){
+              loginSelect.value = saved;
+              loginBtn.disabled = false;
+              setTeacher(saved);
+              return;
+            }
           }
         }
         showLogin();
@@ -1585,7 +1464,7 @@ window.tpDoSwitch = function(){
   currentTeacher = "";
   try{ localStorage.removeItem(LS_KEY); }catch(e){}
   tpLoadSheets().then(function(){
-    tpPopulateTeacherList(); // This now populates search list
+    tpPopulateLoginSelect();
     showLogin();
   }).catch(function(){ showLogin(); });
 };
